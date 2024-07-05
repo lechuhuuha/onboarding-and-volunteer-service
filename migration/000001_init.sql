@@ -43,10 +43,9 @@ CREATE TABLE IF NOT EXISTS 'users' (
     KEY `fk_users_countries_idx` (`country_id`),
     KEY `fk_users_resident_countries_idx` (`resident_country_id`),
     CONSTRAINT `fk_users_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
-    CONSTRAINT `fk_users_depts` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`)
+    CONSTRAINT `fk_users_depts` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`),
     CONSTRAINT `fk_users_countries` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`),
-    CONSTRAINT `fk_users_resident_countries` FOREIGN KEY (`resident_country_id`) REFERENCES `countries` (`id`),
-    
+    CONSTRAINT `fk_users_resident_countries` FOREIGN KEY (`resident_country_id`) REFERENCES `countries` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS 'requests' (
