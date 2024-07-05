@@ -3,7 +3,7 @@ USE `volunteer_db`,
 
 CREATE TABLE IF NOT EXISTS 'roles' (
     `id` INT PRIMARY KEY AUTOINCREMENT,
-    `name` VARCHAR(30) NOT NULL,
+    `name` VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS 'departments' (
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS 'departments' (
 
 CREATE TABLE IF NOT EXISTS 'countries' (
     `id` INT PRIMARY KEY AUTOINCREMENT,
-    `name` VARCHAR(45) NOT NULL,
+    `name` VARCHAR(45) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS 'users' (
