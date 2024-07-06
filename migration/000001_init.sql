@@ -4,15 +4,15 @@ USE `volunteer_manage`;
 
 CREATE TABLE `countries` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `country_name` varchar(45) NOT NULL,
+  `name` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `departments` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `department_name` varchar(45) NOT NULL,
+  `name` varchar(45) NOT NULL,
   `location` varchar(100) NOT NULL,
-  `create_at` datetime DEFAULT NULL,
+  `create_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime DEFAULT NULL,
   `status` tinyint NOT NULL,
   PRIMARY KEY (`id`)
@@ -22,10 +22,10 @@ CREATE TABLE `departments` (
 CREATE TABLE `requests` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
-  `request_type` varchar(45) NOT NULL,
-  `request_status` tinyint NOT NULL DEFAULT '0',
+  `type` varchar(45) NOT NULL,
+  `status` tinyint NOT NULL,
   `reject_notes` varchar(500) DEFAULT NULL,
-  `create_at` datetime DEFAULT NULL,
+  `create_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime DEFAULT NULL,
   `censor_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -38,7 +38,7 @@ CREATE TABLE `requests` (
 
 CREATE TABLE `roles` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `role_name` varchar(45) NOT NULL,
+  `name` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -63,8 +63,8 @@ CREATE TABLE `users` (
   `email` varchar(45) NOT NULL,
   `mobile` varchar(45) NOT NULL,
   `role_id` int NOT NULL,
-  `status` tinyint NOT NULL DEFAULT '0' COMMENT '0: inactive\n1: active',
-  `create_at` datetime DEFAULT NULL,
+  `status` tinyint NOT NULL,
+  `create_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime DEFAULT NULL,
   `department_id` int DEFAULT NULL,
   `sex` varchar(45) NOT NULL,
