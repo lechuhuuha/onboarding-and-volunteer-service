@@ -88,5 +88,5 @@ CREATE TABLE IF NOT EXISTS 'user_identities' (
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
     KEY `fk_user_identities_users_idx` (`user_id`),
-    CONSTRAINT `fk_ui_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+    CONSTRAINT `fk_user_identities_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
