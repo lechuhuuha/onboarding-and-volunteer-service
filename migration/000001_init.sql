@@ -1,86 +1,92 @@
-CREATE DATABASE IF NOT EXISTS `volunteer_manage`;
-
-USE `volunteer_manage`;
-
-CREATE TABLE `countries` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS 'roles' (
+    `id` INT PRIMARY KEY AUTOINCREMENT,
+    `name` VARCHAR(30) NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE `departments` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `location` varchar(100) NOT NULL,
-  `create_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `update_at` datetime DEFAULT NULL,
-  `status` tinyint NOT NULL,
-  PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS 'departments' (
+    `id` INT PRIMARY KEY AUTOINCREMENT,
+    `name` VARCHAR(45) NOT NULL,
+    `address` VARCHAR(100) NOT NULL,
+    `status` TINYINT NOT NULL COMMENT '0: inactive\n1: active',
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
-
-CREATE TABLE `requests` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `type` varchar(45) NOT NULL,
-  `status` tinyint NOT NULL,
-  `reject_notes` varchar(500) DEFAULT NULL,
-  `create_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `update_at` datetime DEFAULT NULL,
-  `censor_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_request_user_idx` (`user_id`),
-  KEY `fk_request_censor_idx` (`censor_id`),
-  CONSTRAINT `fk_request_censor` FOREIGN KEY (`censor_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_request_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+CREATE TABLE IF NOT EXISTS 'countries' (
+    `id` INT PRIMARY KEY AUTOINCREMENT,
+    `name` VARCHAR(45) NOT NULL,
+    `status` TINYINT NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP
 );
 
-
-CREATE TABLE `roles` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS 'users' (
+    `id` INT PRIMARY KEY AUTOINCREMENT,
+    `role_id` INT NOT NULL,
+    `department_id` INT DEFAULT NULL,
+    `email` VARCHAR(45) NOT NULL,
+    `password` TEXT NOT NULL,
+    `name` VARCHAR(45) NOT NULL,
+    `surname` VARCHAR(45) NOT NULL,
+    `gender` VARCHAR(20) NOT NULL,
+    `dob` DATE NOT NULL,
+    `mobile` VARCHAR(15) NOT NULL,
+    `country_id` INT NOT NULL,
+    `resident_country_id` INT NOT NULL,
+    `avatar` VARCHAR(100) DEFAULT NULL,
+    `verification_status` TINYINT DEFAULT 0 COMMENT '0: unverified\n1: verified',
+    `status` TINYINT NOT NULL COMMENT '0: inactive\n1: active',
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    KEY `fk_users_roles_idx` (`role_id`),
+    KEY `fk_users_depts_idx` (`department_id`),
+    KEY `fk_users_countries_idx` (`country_id`),
+    KEY `fk_users_resident_countries_idx` (`resident_country_id`),
+    CONSTRAINT `fk_users_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
+    CONSTRAINT `fk_users_countries` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`),
+    CONSTRAINT `fk_users_resident_countries` FOREIGN KEY (`resident_country_id`) REFERENCES `countries` (`id`)
 );
 
-CREATE TABLE `user_identities` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `number` varchar(20) NOT NULL,
-  `type` varchar(45) NOT NULL,
-  `status` tinyint NOT NULL,
-  `date_expiry` datetime NOT NULL,
-  `place_issue` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_ui_users_idx` (`user_id`),
-  CONSTRAINT `fk_ui_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+CREATE TABLE IF NOT EXISTS 'volunteer_details' (
+    `id` INT PRIMARY KEY AUTOINCREMENT,
+    `user_id` INT NOT NULL,
+    `department_id` INT NOT NULL,
+    `status` TINYINT NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    KEY `fk_volunteer_details_depts_idx` (`department_id`),
+    KEY `fk_volunteer_details_users_idx` (`user_id`),
+    CONSTRAINT `fk_volunteer_details_depts` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`),
+    CONSTRAINT `fk_volunteer_details_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
 
-
-CREATE TABLE `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `surname` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `mobile` varchar(45) NOT NULL,
-  `role_id` int NOT NULL,
-  `status` tinyint NOT NULL,
-  `create_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `update_at` datetime DEFAULT NULL,
-  `department_id` int DEFAULT NULL,
-  `sex` varchar(45) NOT NULL,
-  `dob` datetime NOT NULL,
-  `country_id` int NOT NULL,
-  `resident_country` int NOT NULL,
-  `avt_image` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_users_roles_idx` (`role_id`),
-  KEY `fk_users_depts_idx` (`department_id`),
-  KEY `fk_users_countries_idx` (`country_id`),
-  KEY `fk_users_resident_countries_idx` (`resident_country`),
-  CONSTRAINT `fk_users_countries` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`),
-  CONSTRAINT `fk_users_depts` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`),
-  CONSTRAINT `fk_users_resident_countries` FOREIGN KEY (`resident_country`) REFERENCES `countries` (`id`),
-  CONSTRAINT `fk_users_roles` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
+CREATE TABLE IF NOT EXISTS 'requests' (
+    `id` INT PRIMARY KEY AUTOINCREMENT,
+    `user_id` INT NOT NULL,
+    `type` VARCHAR(45) NOT NULL,
+    `status` TINYINT NOT NULL,
+    `reject_notes` VARCHAR(255) NOT NULL,
+    `verifier_id` INT DEFAULT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    KEY `fk_requests_users_idx` (`user_id`),
+    KEY `fk_requests_verifiers_idx` (`verifier_id`),
+    CONSTRAINT `fk_requests_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+    CONSTRAINT `fk_requests_verifiers` FOREIGN KEY (`verifier_id`) REFERENCES `users` (`id`)
 );
 
-
+CREATE TABLE IF NOT EXISTS 'user_identities' (
+    `id` INT PRIMARY KEY AUTOINCREMENT,
+    `user_id` INT NOT NULL,
+    `number` VARCHAR(30) NOT NULL,
+    `type` VARCHAR(45) NOT NULL,
+    `status` TINYINT NOT NULL,
+    `expiry_date` DATE NOT NULL,
+    `place_issued` VARCHAR(100) NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    KEY `fk_user_identities_users_idx` (`user_id`),
+    CONSTRAINT `fk_user_identities_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+);
