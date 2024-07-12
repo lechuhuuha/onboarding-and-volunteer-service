@@ -23,12 +23,12 @@ type Admin struct {
 }
 
 type Request struct {
-	ID          int
-	UserID      int
-	Type        string
-	Status      int
+	ID          int    `gorm:"primaryKey"`
+	UserID      int    `gorm:"index"`
+	Type        string `gorm:"not null"`
+	Status      int    `gorm:"not null"`
 	RejectNotes string
-	VerifierID  int
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	VerifierID  int       `gorm:"index"`
+	CreatedAt   time.Time `gorm:"autoCreateTime"`
+	UpdatedAt   time.Time `gorm:"autoUpdateTime"`
 }
