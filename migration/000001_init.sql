@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS 'requests' (
     `user_id` INT NOT NULL,
     `type` VARCHAR(45) NOT NULL,
     `status` TINYINT NOT NULL,
-    `reject_notes` VARCHAR(255) NOT NULL,
+    `reject_notes` VARCHAR(255) DEFAULT NULL,
     `verifier_id` INT DEFAULT NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME ON UPDATE CURRENT_TIMESTAMP,
