@@ -5,8 +5,15 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 )
 
-func Login(req dto.LoginUserRequest) (*dto.LoginUserResponse, string) {
-	user, msg := storage.GetUserByEmail(req.Email, req.Password)
+type UserUsecase struct {
+	repo *storage.AuthenticationRepository
+}
+
+func NewUserUsecase(repo *storage.AuthenticationRepository) *UserUsecase {
+	return &UserUsecase{repo: repo}
+}
+func (u *UserUsecase) Login(req dto.LoginUserRequest) (*dto.LoginUserResponse, string) {
+	user, msg := u.repo.GetUserByEmail(req.Email, req.Password)
 	if user != nil {
 		return &dto.LoginUserResponse{
 			ID:                 user.ID,
@@ -16,7 +23,7 @@ func Login(req dto.LoginUserRequest) (*dto.LoginUserResponse, string) {
 			Name:               user.Name,
 			Surname:            user.Surname,
 			Gender:             user.Gender,
-			DOB:                user.DOB,
+			DOB:                user.Dob,
 			Mobile:             user.Mobile,
 			CountryID:          user.CountryID,
 			ResidentCountryID:  user.ResidentCountryID,

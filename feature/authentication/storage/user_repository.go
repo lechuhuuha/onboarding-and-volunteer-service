@@ -2,11 +2,19 @@ package storage
 
 import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/domain"
+	"gorm.io/gorm"
 )
 
-func GetUserByEmail(email string, password string) (*domain.User, string) {
+type AuthenticationRepository struct {
+	DB *gorm.DB
+}
+
+func NewAuthenticationRepository(db *gorm.DB) *AuthenticationRepository {
+	return &AuthenticationRepository{DB: db}
+}
+func (r *AuthenticationRepository) GetUserByEmail(email string, password string) (*domain.User, string) {
 	var user domain.User
-	err := DB.Where("email = ?", email).First(&user).Error
+	err := r.DB.Where("email = ?", email).First(&user).Error
 	if err != nil {
 		return nil, err.Error()
 	}

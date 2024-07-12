@@ -1,10 +1,8 @@
 package domain
 
-import (
-	"time"
-)
+import "time"
 
-type User struct {
+type Admin struct {
 	ID                 int       `gorm:"primaryKey"`
 	RoleID             int       `gorm:"index"`
 	DepartmentID       *int      `gorm:"index"`
@@ -22,4 +20,15 @@ type User struct {
 	Status             int       `gorm:"not null"`
 	CreatedAt          time.Time `gorm:"autoCreateTime"`
 	UpdatedAt          time.Time `gorm:"autoUpdateTime"`
+}
+
+type Request struct {
+	ID          int
+	UserID      int
+	Type        string
+	Status      int
+	RejectNotes string
+	VerifierID  int
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
