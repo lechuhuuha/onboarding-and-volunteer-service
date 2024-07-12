@@ -1,14 +1,18 @@
 module github.com/cesc1802/onboarding-and-volunteer-service
 
-go 1.22
+go 1.22.0
 
 require (
 	github.com/cesc1802/share-module v0.0.0-20240607091227-2bfe51dd43b5
 	github.com/gin-gonic/gin v1.10.0
+	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.8.1
+	gorm.io/driver/mysql v1.5.7
+	gorm.io/gorm v1.25.10
 )
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
@@ -19,6 +23,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.20.0 // indirect
+	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -62,5 +67,4 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/postgres v1.5.7 // indirect
-	gorm.io/gorm v1.25.10 // indirect
 )
