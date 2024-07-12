@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/dto"
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
+	"github.com/gin-gonic/gin"
 )
 
 type UserUsecase struct {
@@ -12,9 +13,10 @@ type UserUsecase struct {
 func NewUserUsecase(repo *storage.AuthenticationRepository) *UserUsecase {
 	return &UserUsecase{repo: repo}
 }
-func (u *UserUsecase) Login(req dto.LoginUserRequest) (*dto.LoginUserResponse, string) {
+func (u *UserUsecase) Login(req dto.LoginUserRequest, c *gin.Context) (*dto.LoginUserResponse, string) {
 	user, msg := u.repo.GetUserByEmail(req.Email, req.Password)
 	if user != nil {
+		c.Set("userId", user.ID)
 		return &dto.LoginUserResponse{
 			ID:                 user.ID,
 			RoleID:             user.RoleID,

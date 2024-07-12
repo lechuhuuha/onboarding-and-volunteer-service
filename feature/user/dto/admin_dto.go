@@ -29,6 +29,5 @@ type ListRequest struct {
 }
 
 type AddRejectNoteRequest struct {
-	ID    int    `json:"id"`
 	Notes string `json:"notes"`
 }

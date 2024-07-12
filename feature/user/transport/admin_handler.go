@@ -44,7 +44,8 @@ func (h *AdminHandler) ApproveRequest(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request ID"})
 		return
 	}
-	msg := h.usecase.ApproveRequest(id)
+	userId := c.MustGet("userId").(int)
+	msg := h.usecase.ApproveRequest(id, userId)
 	c.JSON(http.StatusOK, gin.H{"message": msg})
 }
 
@@ -54,7 +55,8 @@ func (h *AdminHandler) RejectRequest(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request ID"})
 		return
 	}
-	msg := h.usecase.RejectRequest(id)
+	userId := c.MustGet("userId").(int)
+	msg := h.usecase.RejectRequest(id, userId)
 	c.JSON(http.StatusOK, gin.H{"message": msg})
 }
 
@@ -70,5 +72,15 @@ func (h *AdminHandler) AddRejectNotes(c *gin.Context) {
 		return
 	}
 	msg := h.usecase.AddRejectNotes(id, req.Notes)
+	c.JSON(http.StatusOK, gin.H{"message": msg})
+}
+
+func (h *AdminHandler) DeleteRequest(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request ID"})
+		return
+	}
+	msg := h.usecase.DeleteRequest(id)
 	c.JSON(http.StatusOK, gin.H{"message": msg})
 }

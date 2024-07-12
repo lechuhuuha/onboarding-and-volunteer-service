@@ -50,9 +50,11 @@ func RegisterHandlerV1(mono system.Service) {
 	admin := v1.Group("/admin")
 	{
 		admin.GET("/list-request", userHandler.GetListRequest)
+		admin.GET("/request/:id", userHandler.GetRequestById)
 		admin.POST("/approve-request/:id", userHandler.ApproveRequest)
 		admin.POST("/reject-request/:id", userHandler.RejectRequest)
 		admin.POST("/add-reject-notes/:id", userHandler.AddRejectNotes)
+		admin.DELETE("/delete-request/:id", userHandler.DeleteRequest)
 	}
 
 }

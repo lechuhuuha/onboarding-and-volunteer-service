@@ -33,15 +33,15 @@ func (r *AdminRepository) GetRequestByID(id int) (*domain.Request, string) {
 	return &request, ""
 }
 
-func (r *AdminRepository) ApproveRequest(id int) string {
-	result := r.DB.Model(&domain.Request{}).Where("id = ?", id).Update("status", 1)
+func (r *AdminRepository) ApproveRequest(id int, verifier_id int) string {
+	result := r.DB.Model(&domain.Request{}).Where("id = ?", id).Update("status", 1).Update("verifier_id", verifier_id)
 	if result.Error != nil {
 		return result.Error.Error()
 	}
 	return "Approve request success"
 }
-func (r *AdminRepository) RejectRequest(id int) string {
-	result := r.DB.Model(&domain.Request{}).Where("id = ?", id).Update("status", 2)
+func (r *AdminRepository) RejectRequest(id int, verifier_id int) string {
+	result := r.DB.Model(&domain.Request{}).Where("id = ?", id).Update("status", 2).Update("verifier_id", verifier_id)
 	if result.Error != nil {
 		return result.Error.Error()
 	}
@@ -53,4 +53,11 @@ func (r *AdminRepository) AddRejectNotes(id int, notes string) string {
 		return result.Error.Error()
 	}
 	return "Add reject notes success"
+}
+func (r *AdminRepository) DeleteRequest(id int) string {
+	result := r.DB.Where("id = ?", id).Delete(&domain.Request{})
+	if result.Error != nil {
+		return result.Error.Error()
+	}
+	return "Delete request success"
 }

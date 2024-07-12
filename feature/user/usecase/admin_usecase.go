@@ -42,12 +42,15 @@ func (u *AdminUsecase) GetRequestById(id int) (*dto.RequestResponse, string) {
 	return nil, msg
 }
 
-func (u *AdminUsecase) ApproveRequest(id int) string {
-	return u.repo.ApproveRequest(id)
+func (u *AdminUsecase) ApproveRequest(id int, verifier_id int) string {
+	return u.repo.ApproveRequest(id, verifier_id)
 }
-func (u *AdminUsecase) RejectRequest(id int) string {
-	return u.repo.RejectRequest(id)
+func (u *AdminUsecase) RejectRequest(id int, verifier_id int) string {
+	return u.repo.RejectRequest(id, verifier_id)
 }
 func (u *AdminUsecase) AddRejectNotes(id int, notes string) string {
 	return u.repo.AddRejectNotes(id, notes)
+}
+func (u *AdminUsecase) DeleteRequest(id int) string {
+	return u.repo.DeleteRequest(id)
 }
