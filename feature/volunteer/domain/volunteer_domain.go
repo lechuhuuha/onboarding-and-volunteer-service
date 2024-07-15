@@ -2,15 +2,13 @@ package domain
 
 import (
 	"time"
-	"gorm.io/gorm"
 )
 
 type Volunteer struct {
-	gorm.Model
-	Id           uint `gorm:"primaryKey"`
-	UserId       uint `gorm:"notnull"`
-	DepartmentId uint `gorm:"notnull"`
-	Status       uint `gorm:"notnull"`
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID           int       `gorm:"primaryKey"`
+	UserID       int       `gorm:"unique;notnull"`
+	DepartmentID int       `gorm:"notnull"`
+	Status       int       `gorm:"notnull"`
+	CreatedAt    time.Time `gorm:"autoCreateTime"`
+	UpdatedAt    time.Time `gorm:"autoUpdateTime"`
 }

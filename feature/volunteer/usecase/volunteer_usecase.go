@@ -6,57 +6,48 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/volunteer/storage"
 )
 
-type VolunteerUsecase interface {
-	CreateVolunteer(input dto.VolunteerCreateDTO) (*domain.Volunteer, error)
-	GetAllVolunteers() ([]*domain.Volunteer, error)
-	GetVolunteerByID(id uint) (*domain.Volunteer, error)
-	UpdateVolunteer(id uint, input dto.VolunteerUpdateDTO) (*domain.Volunteer, error)
-	DeleteVolunteer(id uint) error
+type VolunteerUsecase struct {
+	VolunteerRepo storage.VolunteerRepository
 }
 
-type volunteerUsecase struct {
-	repo storage.VolunteerRepository
+func NewVolunteerUsecase(volunteerRepo storage.VolunteerRepository) *VolunteerUsecase {
+	return &VolunteerUsecase{VolunteerRepo: volunteerRepo}
 }
 
-// CreateVolunteer implements VolunteerUsecase.
-func (v *volunteerUsecase) CreateVolunteer(input dto.VolunteerCreateDTO) (*domain.Volunteer, error) {
+func (u *VolunteerUsecase) CreateVolunteer(input dto.VolunteerCreateDTO) error {
 	volunteer := &domain.Volunteer{
-		UserId: input.UserId,
-		DepartmentId: input.DepartmentId,
-		Status: input.Status,
+		UserID:       input.UserID,
+		DepartmentID: input.DepartmentID,
+		Status:       input.Status,
 	}
-	err := v.repo.Create(volunteer)
-	return volunteer, err
+	return u.VolunteerRepo.CreateVolunteer(volunteer)
 }
 
-// GetAllVolunteers implements VolunteerUsecase.
-func (v *volunteerUsecase) GetAllVolunteers() ([]*domain.Volunteer, error) {
-	return v.repo.GetAll()
+func (u *VolunteerUsecase) UpdateVolunteer(id int, input dto.VolunteerUpdateDTO) error {
+	volunteer, err := u.VolunteerRepo.FindVolunteerByID(id)
+	if err != nil {
+		return err
+	}
+	volunteer.DepartmentID = input.DepartmentID
+	volunteer.Status = input.Status
+
+	return u.VolunteerRepo.UpdateVolunteer(volunteer)
 }
 
-// GetVolunteerByID implements VolunteerUsecase.
-func (v *volunteerUsecase) GetVolunteerByID(id uint) (*domain.Volunteer, error) {
-	return v.repo.GetByID(id)
+func (u *VolunteerUsecase) DeleteVolunteer(id int) error {
+	return u.VolunteerRepo.DeleteVolunteer(id)
 }
 
-// UpdateVolunteer implements VolunteerUsecase.
-func (v *volunteerUsecase) UpdateVolunteer(id uint, input dto.VolunteerUpdateDTO) (*domain.Volunteer, error) {
-	volunteer, err := v.repo.GetByID(id)
+func (u *VolunteerUsecase) FindVolunteerByID(id int) (*dto.VolunteerResponseDTO, error) {
+	volunteer, err := u.VolunteerRepo.FindVolunteerByID(id)
 	if err != nil {
 		return nil, err
 	}
-	volunteer.DepartmentId = input.DepartmentId
-	volunteer.Status = input.Status
-	err = v.repo.Update(volunteer)
-	return volunteer, err
-}
-
-// DeleteVolunteer implements VolunteerUsecase.
-func (v *volunteerUsecase) DeleteVolunteer(id uint) error {
-	return v.repo.Delete(id)
-}
-
-
-func NewVolunteerUsecase(repo storage.VolunteerRepository) VolunteerUsecase {
-	return &volunteerUsecase{repo: repo}
+	response := &dto.VolunteerResponseDTO{
+		ID:           volunteer.ID,
+		UserID:       volunteer.UserID,
+		DepartmentID: volunteer.DepartmentID,
+		Status:       volunteer.Status,
+	}
+	return response, nil
 }

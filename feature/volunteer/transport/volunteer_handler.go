@@ -9,67 +9,33 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type VolunteerHandler interface {
-	CreateVolunteer(c *gin.Context)
-	GetAllVolunteers(c *gin.Context)
-	GetVolunteerByID(c *gin.Context)
-	UpdateVolunteer(c *gin.Context)
-	DeleteVolunteer(c *gin.Context)
+type VolunteerHandler struct {
+	VolUsecaseH *usecase.VolunteerUsecase
 }
 
-type volunteerHandler struct {
-	usecase usecase.VolunteerUsecase
+func NewVolunteerHandler(volUsecase *usecase.VolunteerUsecase) *VolunteerHandler {
+	return &VolunteerHandler{VolUsecaseH: volUsecase}
 }
 
-// CreateVolunteer implements VolunteerHandler.
-func (v *volunteerHandler) CreateVolunteer(c *gin.Context) {
+func (h *VolunteerHandler) CreateVolunteer(c *gin.Context) {
 	var input dto.VolunteerCreateDTO
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	volunteer, err := v.usecase.CreateVolunteer(input)
-	if err != nil {
+	if err := h.VolUsecaseH.CreateVolunteer(input); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, volunteer)
+	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 }
 
-// GetAllVolunteers implements VolunteerHandler.
-func (v *volunteerHandler) GetAllVolunteers(c *gin.Context) {
-	volunteers, err := v.usecase.GetAllVolunteers()
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "No volunteers found"})
-	}
-
-	c.JSON(http.StatusOK, volunteers)
-}
-
-// GetVolunteerByID implements VolunteerHandler.
-func (v *volunteerHandler) GetVolunteerByID(c *gin.Context) {
+func (h *VolunteerHandler) UpdateVolunteer(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
-		return
-	}
-
-	volunteer, err := v.usecase.GetVolunteerByID(uint(id))
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Volunteer not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, volunteer)
-}
-
-// UpdateVolunteer implements VolunteerHandler.
-func (v *volunteerHandler) UpdateVolunteer(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid volunteer ID"})
 		return
 	}
 
@@ -79,32 +45,41 @@ func (v *volunteerHandler) UpdateVolunteer(c *gin.Context) {
 		return
 	}
 
-	volunteer, err := v.usecase.UpdateVolunteer(uint(id), input)
-	if err != nil {
+	if err := h.VolUsecaseH.UpdateVolunteer(id, input); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, volunteer)
+	c.JSON(http.StatusOK, gin.H{"message": "Volunteer updated successfully"})
 }
 
-// DeleteVolunteer implements VolunteerHandler.
-func (v *volunteerHandler) DeleteVolunteer(c *gin.Context) {
+func (h *VolunteerHandler) DeleteVolunteer(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid volunteer ID"})
+		return
+	}
+
+	if err = h.VolUsecaseH.DeleteVolunteer(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Volunteer deleted successfully"})
+}
+
+func (h *VolunteerHandler) FindVolunteerByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
 		return
 	}
 
-	err = v.usecase.DeleteVolunteer(uint(id))
+	volunteer, err := h.VolUsecaseH.VolunteerRepo.FindVolunteerByID(id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Volunteer not found"})
 		return
 	}
 
-	c.JSON(http.StatusNoContent, nil)
-}
-
-func NewVolunteerHandler(usecase usecase.VolunteerUsecase) VolunteerHandler {
-	return &volunteerHandler{usecase: usecase}
+	c.JSON(http.StatusOK, volunteer)
 }
