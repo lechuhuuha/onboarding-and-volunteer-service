@@ -1,42 +1,77 @@
 package usecase
 
 import (
+	"time"
+
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/domain"
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/dto"
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/storage"
 )
 
 type ApplicantUsecase struct {
-	repo *storage.ApplicantRepository
+	ApplicantRepo *storage.ApplicantRepository
 }
 
-// NewCountryUsecase creates a new instance of CountryUsecase.
-func NewCountryUsecase(repo *storage.ApplicantRepository) *ApplicantUsecase {
-	return &ApplicantUsecase{repo: repo}
+func NewApplicantUsecase(userRepo *storage.ApplicantRepository) *ApplicantUsecase {
+	return &ApplicantUsecase{ApplicantRepo: userRepo}
 }
 
-// Tao 1 user lần đầu tiên
-func (u *ApplicantUsecase) SignupUser(userDTO dto.UserSignupDTO) error {
-	user := domain.User{
-		Email:   userDTO.Email,
-		Name:    userDTO.Name,
-		Surname: userDTO.Surname,
+func (u *ApplicantUsecase) CreateApplicant(request dto.ApplicantCreateDTO) error {
+	user := &domain.ApplicantDomain{
+		Email:   request.Email,
+		Name:    request.Name,
+		Surname: request.Surname,
 	}
-	return u.repo.CreateUser(&user)
+	return u.ApplicantRepo.CreateApplicant(user)
 }
 
-// Update user khi điền xong application form
-func (u *ApplicantUsecase) UpdateUser(userDTO dto.UserUpdateDTO) error {
-	user := domain.User{
-		ID:      userDTO.ID,
-		Email:   userDTO.Email,
-		Name:    userDTO.Name,
-		Surname: userDTO.Surname,
+func (u *ApplicantUsecase) UpdateApplicant(id int, request dto.AppplicantUpdateDTO) error {
+	user, err := u.ApplicantRepo.FindApplicantByID(id)
+	if err != nil {
+		return err
 	}
-	return u.repo.UpdateUser(&user)
+	//Thay doi request DOB ve dang time.Time
+	dob, err := time.Parse("2006-01-02", request.DOB)
+	if err != nil {
+		return err
+	}
+
+	user.Email = request.Email
+	user.Name = request.Name
+	user.Surname = request.Surname
+	user.Gender = request.Gender
+	user.DOB = dob
+	user.Mobile = request.Mobile
+	user.RoleID = request.RoleID
+	user.CountryID = request.CountryID
+	user.ResidentCountryID = request.ResidentCountryID
+	user.DepartmentID = request.DepartmentID
+
+	return u.ApplicantRepo.UpdateApplicant(user)
 }
 
-// Delete
-func (u *ApplicantUsecase) DeleteUser(userID uint) error {
-	return u.repo.DeleteUser(userID)
+func (u *ApplicantUsecase) DeleteApplicant(id int) error {
+	return u.ApplicantRepo.DeleteApplicant(id)
+}
+
+func (u *ApplicantUsecase) FindApplicantByID(id int) (*dto.ApplicantResponseDTO, error) {
+	user, err := u.ApplicantRepo.FindApplicantByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.ApplicantResponseDTO{
+		ID:                user.ID,
+		Email:             user.Email,
+		Name:              user.Name,
+		Surname:           user.Surname,
+		Gender:            user.Gender,
+		DOB:               user.DOB.String(),
+		Mobile:            user.Mobile,
+		RoleID:            user.RoleID,
+		CountryID:         user.CountryID,
+		ResidentCountryID: user.ResidentCountryID,
+		DepartmentID:      user.DepartmentID,
+	}
+	return response, nil
 }

@@ -1,27 +1,23 @@
 package domain
 
-import (
-	"time"
-)
+import "time"
 
-// lớp struct tương tác với database (GORM)
-
-type User struct {
-	ID                 uint `gorm:"primaryKey"`
-	RoleID             uint `gorm:"not null"`
-	DepartmentID       *uint
-	Email              string    `gorm:"size:45;not null"`
-	Password           string    `gorm:"type:text;not null"`
-	Name               string    `gorm:"size:45;not null"`
-	Surname            string    `gorm:"size:45;not null"`
-	Gender             string    `gorm:"size:20;not null"`
+type ApplicantDomain struct {
+	ID                 int `gorm:"primaryKey"`
+	RoleID             int `gorm:"not null"`
+	DepartmentID       int
+	Email              string    `gorm:"not null"`
+	Password           string    `gorm:"not null"`
+	Name               string    `gorm:"not null"`
+	Surname            string    `gorm:"not null"`
+	Gender             string    `gorm:"not null"`
 	DOB                time.Time `gorm:"not null"`
-	Mobile             string    `gorm:"size:15;not null"`
-	CountryID          uint      `gorm:"not null"`
-	ResidentCountryID  uint      `gorm:"not null"`
-	Avatar             *string
-	VerificationStatus uint `gorm:"default:0"`
-	Status             uint `gorm:"not null"`
-	CreatedAt          time.Time
-	UpdatedAt          time.Time
+	Mobile             string    `gorm:"not null"`
+	CountryID          int       `gorm:"not null"`
+	ResidentCountryID  int       `gorm:"not null"`
+	Avatar             string
+	VerificationStatus int       `gorm:"default:0"`
+	Status             int       `gorm:"not null"`
+	CreatedAt          time.Time `gorm:"autoCreateTime"`
+	UpdatedAt          time.Time `gorm:"autoUpdateTime"`
 }
