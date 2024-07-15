@@ -24,7 +24,7 @@ type Admin struct {
 
 type Request struct {
 	ID          int    `gorm:"primaryKey"`
-	UserID      int    `gorm:"index"`
+	UserID      uint   `gorm:"index"`
 	Type        string `gorm:"not null"`
 	Status      int    `gorm:"not null"`
 	RejectNotes string

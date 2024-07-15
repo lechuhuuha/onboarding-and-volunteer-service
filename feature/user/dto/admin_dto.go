@@ -1,8 +1,9 @@
 package dto
 
 import (
-	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/domain"
 	"time"
+
+	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/domain"
 )
 
 type PendingRequest struct {
@@ -15,7 +16,7 @@ type PendingRequest struct {
 
 type RequestResponse struct {
 	ID          int       `json:"id"`
-	UserID      int       `json:"user_id"`
+	UserID      uint      `json:"user_id"`
 	Type        string    `json:"type"`
 	Status      int       `json:"status"`
 	RejectNotes string    `json:"reject_notes"`
