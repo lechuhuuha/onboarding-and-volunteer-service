@@ -7,23 +7,18 @@ import (
 )
 
 type ApplicantRequestUsecase struct {
-	repo *storage.ApplicantRequestRepository
+	RequestRepo *storage.ApplicantRequestRepository
 }
 
-// NewCountryUsecase creates a new instance of CountryUsecase.
-func NewApplicantRequestUsecase(repo *storage.ApplicantRequestRepository) *ApplicantRequestUsecase {
-	return &ApplicantRequestUsecase{repo: repo}
+func NewApplicantRequestUsecase(requestRepo *storage.ApplicantRequestRepository) *ApplicantRequestUsecase {
+	return &ApplicantRequestUsecase{RequestRepo: requestRepo}
 }
 
-// Function submit application form, tạo ra 1 record trong bảng request
-func (u *ApplicantRequestUsecase) SubmitApplicationForm(appFormDTO dto.ApplicationFormDTO) error {
-	//Function parse thời gian về đúng format mình cần dùng
-
-	request := domain.Request{
-		UserID: appFormDTO.UserID,
-		Type:   "application form",
-		Status: 0, // Dat 0 lam default
+func (u *ApplicantRequestUsecase) CreateRequest(request dto.ApplicantRequestCreatingDTO) error {
+	req := &domain.ApplicantRequestDomain{
+		UserID: request.UserID,
+		Type:   request.Type,
+		Status: request.Status,
 	}
-
-	return u.repo.CreateRequest(&request)
+	return u.RequestRepo.CreateApplicantRequest(req)
 }

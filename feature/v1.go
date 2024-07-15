@@ -1,6 +1,8 @@
 package feature
 
 import (
+	"net/http"
+
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 	authStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 	authTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/transport"
@@ -8,7 +10,10 @@ import (
 	userStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/user/storage"
 	userTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/user/transport"
 	userUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/user/usecase"
-	"net/http"
+
+	appliIdentityStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/storage"
+	appliIdentityTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/transport"
+	appliIdentityUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/usecase"
 
 	"github.com/cesc1802/share-module/system"
 	"github.com/gin-gonic/gin"
@@ -29,14 +34,23 @@ func RegisterHandlerV1(mono system.Service) {
 	// Initialize repository
 	authRepo := authStorage.NewAuthenticationRepository(storage.DB)
 	userRepo := userStorage.NewAdminRepository(storage.DB)
+	applicantRepo := userStorage.NewApplicantRepository(storage.DB)
+	applicantRequestRepo := userStorage.NewApplicantRequestRepository(storage.DB)
+	applicantIdentityRepo := appliIdentityStorage.NewUserIdentityRepository(storage.DB)
 
 	// Initialize usecase
 	authUseCase := authUsecase.NewUserUsecase(authRepo)
 	userUseCase := userUsecase.NewAdminUsecase(userRepo)
+	applicantUseCase := userUsecase.NewApplicantUsecase(applicantRepo)
+	applicantRequestUseCase := userUsecase.NewApplicantRequestUsecase(applicantRequestRepo)
+	applicantIdenityUseCase := appliIdentityUsecase.NewUserIdentityUsecase(applicantIdentityRepo)
 
 	// Initialize handler
 	authHandler := authTransport.NewAuthenticationHandler(authUseCase)
 	userHandler := userTransport.NewAuthenticationHandler(userUseCase)
+	applicantHandler := userTransport.NewApplicantHandler(applicantUseCase)
+	applicantRequestHandler := userTransport.NewRequestHandler(applicantRequestUseCase)
+	applicantIdentityHandler := appliIdentityTransport.NewUserIdentityHandler(applicantIdenityUseCase)
 
 	auth := v1.Group("/auth")
 	{
@@ -55,6 +69,26 @@ func RegisterHandlerV1(mono system.Service) {
 		admin.POST("/reject-request/:id", userHandler.RejectRequest)
 		admin.POST("/add-reject-notes/:id", userHandler.AddRejectNotes)
 		admin.DELETE("/delete-request/:id", userHandler.DeleteRequest)
+	}
+
+	applicant := v1.Group("/applicant")
+	{
+		applicant.POST("/", applicantHandler.CreateApplicant)
+		applicant.PUT("/update/:id", applicantHandler.UpdateApplicant)
+		applicant.DELETE("/:id", applicantHandler.CreateApplicant)
+		applicant.GET("/:id")
+	}
+
+	appliRequest := v1.Group("/applicant-request")
+	{
+		appliRequest.POST("/", applicantRequestHandler.CreateRequest)
+	}
+
+	appliIdentity := v1.Group("applicant-identity")
+	{
+		appliIdentity.POST("/", applicantIdentityHandler.CreateUserIdentity)
+		appliIdentity.GET("/:id", applicantIdentityHandler.FindUserIdentity)
+		appliIdentity.POST("/:id", applicantIdentityHandler.UpdateUserIdentity)
 	}
 
 }

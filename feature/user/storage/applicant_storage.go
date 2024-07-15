@@ -2,6 +2,7 @@ package storage
 
 import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/domain"
+
 	"gorm.io/gorm"
 )
 
@@ -13,15 +14,22 @@ func NewApplicantRepository(db *gorm.DB) *ApplicantRepository {
 	return &ApplicantRepository{DB: db}
 }
 
-// CRUD với các user là applicant
-func (r *ApplicantRepository) CreateUser(user *domain.User) error {
-	return DB.Create(user).Error
+func (r *ApplicantRepository) CreateApplicant(user *domain.ApplicantDomain) error {
+	return r.DB.Create(user).Error
 }
 
-func (r *ApplicantRepository) UpdateUser(user *domain.User) error {
-	return DB.Save(user).Error
+func (r *ApplicantRepository) UpdateApplicant(user *domain.ApplicantDomain) error {
+	return r.DB.Save(user).Error
 }
 
-func (r *ApplicantRepository) DeleteUser(userID uint) error {
-	return DB.Delete(&domain.User{}, userID).Error
+func (r *ApplicantRepository) DeleteApplicant(id int) error {
+	return r.DB.Delete(&domain.ApplicantDomain{}, id).Error
+}
+
+func (r *ApplicantRepository) FindApplicantByID(id int) (*domain.ApplicantDomain, error) {
+	var user domain.ApplicantDomain
+	if err := r.DB.First(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
 }
