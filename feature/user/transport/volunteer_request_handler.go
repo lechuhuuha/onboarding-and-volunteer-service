@@ -16,7 +16,7 @@ func NewVolunteerRequestHandler(volRequestUsecase *usecase.VolunteerRequestUseca
 	return &VolunteerRequestHandler{VolRequestUsecase: volRequestUsecase}
 }
 
-func (h *VolunteerRequestHandler) CreateRequest(c gin.Context) {
+func (h *VolunteerRequestHandler) CreateRequest(c *gin.Context) {
 	var request dto.VoluteerRequestCreatingDTO
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
