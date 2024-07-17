@@ -16,12 +16,51 @@ func NewAuthenticationHandler(usecase *usecase.AdminUsecase) *AdminHandler {
 	return &AdminHandler{usecase: usecase}
 }
 
+// GetListPendingRequest godoc
+// @Summary Get list pending request
+// @Description Get list pending request
+// @Produce json
+// @Tags admin
+// @Security bearerToken
+// @Success 200 {object} dto.ListRequest{}
+// @Router /api/v1/admin/list-pending-request [get]
+func (h *AdminHandler) GetListPendingRequest(c *gin.Context) {
+	resp, msg := h.usecase.GetListPendingRequest()
+	if msg != "" {
+		c.JSON(http.StatusNotFound, gin.H{"error": msg})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
+}
+
+// GetPendingRequestById godoc
+// @Summary Get pending request by ID
+// @Description Get pending request by ID
+// @Produce json
+// @Tags admin
+// @Param id path int true "Request ID"
+// @Success 200 {object} dto.RequestResponse{}
+// @Security bearerToken
+// @Router /api/v1/admin/pending-request/{id} [get]
+func (h *AdminHandler) GetPendingRequestById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request ID"})
+		return
+	}
+	resp, msg := h.usecase.GetPendingRequestById(id)
+	if msg != "" {
+		c.JSON(http.StatusNotFound, gin.H{"error": msg})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
+}
+
 // GetListRequest godoc
 // @Summary Get list request
 // @Description Get list request
 // @Produce json
 // @Tags admin
-// @Host localhost:3000
 // @Security bearerToken
 // @Success 200 {object} dto.ListRequest{}
 // @Router /api/v1/admin/list-request [get]
@@ -39,7 +78,6 @@ func (h *AdminHandler) GetListRequest(c *gin.Context) {
 // @Description Get request by ID
 // @Produce json
 // @Tags admin
-// @Host localhost:3000
 // @Param id path int true "Request ID"
 // @Success 200 {object} dto.RequestResponse{}
 // @Security bearerToken
@@ -63,7 +101,6 @@ func (h *AdminHandler) GetRequestById(c *gin.Context) {
 // @Description Approve request
 // @Produce json
 // @Tags admin
-// @Host localhost:3000
 // @Param id path int true "Request ID"
 // @Success 200 string message
 // @Security bearerToken
@@ -88,7 +125,6 @@ func (h *AdminHandler) ApproveRequest(c *gin.Context) {
 // @Description Reject request
 // @Produce json
 // @Tags admin
-// @Host localhost:3000
 // @Param id path int true "Request ID"
 // @Success 200 string message
 // @Security bearerToken
@@ -113,8 +149,8 @@ func (h *AdminHandler) RejectRequest(c *gin.Context) {
 // @Description Add reject notes
 // @Produce json
 // @Tags admin
-// @Host localhost:3000
 // @Param id path int true "Request ID"
+// @Param notes body dto.AddRejectNoteRequest true "Add Reject Note Request"
 // @Success 200 string message
 // @Security bearerToken
 // @Router /api/v1/admin/add-reject-notes/{id} [post]
@@ -133,6 +169,15 @@ func (h *AdminHandler) AddRejectNotes(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": msg})
 }
 
+// DeleteRequest godoc
+// @Summary Delete request
+// @Description Delete request
+// @Produce json
+// @Tags admin
+// @Param id path int true "Request ID"
+// @Success 200 string message
+// @Security bearerToken
+// @Router /api/v1/admin/delete-request/{id} [delete]
 func (h *AdminHandler) DeleteRequest(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

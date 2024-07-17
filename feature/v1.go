@@ -19,20 +19,16 @@ import (
 	appliIdentityUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/usecase"
 
 	"github.com/cesc1802/share-module/system"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-// @title Onboarding and Volunteer Service API
-// @version 1.0
-// @description This is a volunteer service API
-// @securityDefinitions.apiKey bearerToken
-// @in header
-// @name Authorization
 // @host localhost:8080
 // @BasePath /api/v1
 func RegisterHandlerV1(mono system.Service) {
 	router := mono.Router()
 	secretKey := storage.GetSecretKey()
+	router.Use(cors.Default())
 	// add swagger
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/health", func(c *gin.Context) {
@@ -41,8 +37,6 @@ func RegisterHandlerV1(mono system.Service) {
 		})
 	})
 	v1 := router.Group("/api/v1")
-	// Initialize database connection
-
 	// Initialize repository
 	authRepo := authStorage.NewAuthenticationRepository(mono.DB())
 	userRepo := userStorage.NewAdminRepository(mono.DB())
@@ -68,9 +62,7 @@ func RegisterHandlerV1(mono system.Service) {
 	{
 		auth.POST("/login", authHandler.Login)
 
-		//auth.POST("/register", func(c *gin.Context) {
-		//
-		//})
+		auth.POST("/register", authHandler.Register)
 	}
 
 	admin := v1.Group("/admin")
@@ -78,6 +70,8 @@ func RegisterHandlerV1(mono system.Service) {
 	{
 		admin.GET("/list-request", userHandler.GetListRequest)
 		admin.GET("/request/:id", userHandler.GetRequestById)
+		admin.GET("/list-pending-request", userHandler.GetListPendingRequest)
+		admin.GET("/pending-request/:id", userHandler.GetPendingRequestById)
 		admin.POST("/approve-request/:id", userHandler.ApproveRequest)
 		admin.POST("/reject-request/:id", userHandler.RejectRequest)
 		admin.POST("/add-reject-notes/:id", userHandler.AddRejectNotes)

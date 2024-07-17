@@ -12,8 +12,38 @@ type AdminUsecase struct {
 func NewAdminUsecase(repo *storage.AdminRepository) *AdminUsecase {
 	return &AdminUsecase{repo: repo}
 }
-func (u *AdminUsecase) GetListRequest() (*dto.ListRequest, string) {
+func (u *AdminUsecase) GetListPendingRequest() (*dto.ListRequest, string) {
 	requests, msg := u.repo.GetListPendingRequest()
+	if requests != nil {
+		return &dto.ListRequest{
+			Requests: requests,
+		}, msg
+	} else {
+		msg = "No request found"
+	}
+	return nil, msg
+}
+func (u *AdminUsecase) GetPendingRequestById(id int) (*dto.RequestResponse, string) {
+	request, msg := u.repo.GetPendingRequestByID(id)
+	if request != nil {
+		return &dto.RequestResponse{
+			ID:          request.ID,
+			UserID:      request.UserID,
+			Type:        request.Type,
+			Status:      request.Status,
+			RejectNotes: request.RejectNotes,
+			VerifierID:  request.VerifierID,
+			CreateAt:    request.CreatedAt,
+			UpdateAt:    request.UpdatedAt,
+		}, msg
+	} else {
+		msg = "Request not found"
+	}
+	return nil, msg
+}
+
+func (u *AdminUsecase) GetListRequest() (*dto.ListRequest, string) {
+	requests, msg := u.repo.GetListAllRequest()
 	if requests != nil {
 		return &dto.ListRequest{
 			Requests: requests,

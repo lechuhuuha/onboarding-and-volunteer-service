@@ -36,3 +36,18 @@ func (u *UserUsecase) Login(req dto.LoginUserRequest) (*dto.LoginUserTokenRespon
 	}
 	return nil, msg
 }
+
+func (u *UserUsecase) RegisterUser(req dto.RegisterUserRequest) (*dto.RegisterUserResponse, string) {
+	// check existed user
+	user, _ := u.repo.GetUserByEmail(req.Email, "")
+	if user != nil {
+		return nil, "User existed"
+	}
+	// register user
+	registerUser, err := u.repo.RegisterUser(&req)
+	if err != nil {
+		return nil, "Register failed"
+	}
+
+	return registerUser, ""
+}

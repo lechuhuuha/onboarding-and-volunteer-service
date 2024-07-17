@@ -16,6 +16,15 @@ func NewVolunteerRequestHandler(volRequestUsecase *usecase.VolunteerRequestUseca
 	return &VolunteerRequestHandler{VolRequestUsecase: volRequestUsecase}
 }
 
+// CreateRequest godoc
+// @Summary Create a new volunteer request
+// @Description Create a new volunteer request
+// @Produce json
+// @Tags volunteer
+// @Accept json
+// @Param request body dto.VoluteerRequestCreatingDTO true "Request body"
+// @Success 201 {object} string
+// @Router /api/v1/volunteer/request [post]
 func (h *VolunteerRequestHandler) CreateRequest(c *gin.Context) {
 	var request dto.VoluteerRequestCreatingDTO
 	if err := c.ShouldBindJSON(&request); err != nil {
