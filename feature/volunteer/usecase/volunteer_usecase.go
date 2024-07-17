@@ -6,11 +6,18 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/volunteer/storage"
 )
 
-type VolunteerUsecase struct {
-	VolunteerRepo storage.VolunteerRepository
+type VolunteerUsecaseInterface interface {
+	CreateVolunteer(input dto.VolunteerCreateDTO) error
+	UpdateVolunteer(id int, input dto.VolunteerUpdateDTO) error
+	DeleteVolunteer(id int) error
+	FindVolunteerByID(id int) (*dto.VolunteerResponseDTO, error)
 }
 
-func NewVolunteerUsecase(volunteerRepo storage.VolunteerRepository) *VolunteerUsecase {
+type VolunteerUsecase struct {
+	VolunteerRepo storage.VolunteerRepositoryInterface
+}
+
+func NewVolunteerUsecase(volunteerRepo storage.VolunteerRepositoryInterface) *VolunteerUsecase {
 	return &VolunteerUsecase{VolunteerRepo: volunteerRepo}
 }
 

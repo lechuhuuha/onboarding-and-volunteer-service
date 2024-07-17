@@ -10,10 +10,10 @@ import (
 )
 
 type VolunteerHandler struct {
-	VolUsecaseH *usecase.VolunteerUsecase
+	VolUsecaseH usecase.VolunteerUsecaseInterface
 }
 
-func NewVolunteerHandler(volUsecase *usecase.VolunteerUsecase) *VolunteerHandler {
+func NewVolunteerHandler(volUsecase usecase.VolunteerUsecaseInterface) *VolunteerHandler {
 	return &VolunteerHandler{VolUsecaseH: volUsecase}
 }
 
@@ -75,7 +75,7 @@ func (h *VolunteerHandler) FindVolunteerByID(c *gin.Context) {
 		return
 	}
 
-	volunteer, err := h.VolUsecaseH.VolunteerRepo.FindVolunteerByID(id)
+	volunteer, err := h.VolUsecaseH.FindVolunteerByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Volunteer not found"})
 		return
