@@ -19,6 +19,27 @@ func (r *AdminRepository) GetListPendingRequest() ([]*domain.Request, string) {
 		return nil, result.Error.Error()
 	}
 	if len(listRequest) == 0 {
+		return nil, "No request pending"
+	}
+	return listRequest, ""
+}
+
+func (r *AdminRepository) GetPendingRequestByID(id int) (*domain.Request, string) {
+	var request domain.Request
+	result := r.DB.Where("id = ? and status = 0", id).First(&request)
+	if result.Error != nil {
+		return nil, result.Error.Error()
+	}
+	return &request, ""
+}
+
+func (r *AdminRepository) GetListAllRequest() ([]*domain.Request, string) {
+	var listRequest []*domain.Request
+	result := r.DB.Find(&listRequest)
+	if result.Error != nil {
+		return nil, result.Error.Error()
+	}
+	if len(listRequest) == 0 {
 		return nil, "No request found"
 	}
 	return listRequest, ""
@@ -26,7 +47,7 @@ func (r *AdminRepository) GetListPendingRequest() ([]*domain.Request, string) {
 
 func (r *AdminRepository) GetRequestByID(id int) (*domain.Request, string) {
 	var request domain.Request
-	result := r.DB.Where("id = ? and status = 0", id).First(&request)
+	result := r.DB.Where("id = ?", id).First(&request)
 	if result.Error != nil {
 		return nil, result.Error.Error()
 	}

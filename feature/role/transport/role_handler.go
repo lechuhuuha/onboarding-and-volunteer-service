@@ -20,6 +20,14 @@ func NewRoleHandler(usecase *usecase.RoleUsecase) *RoleHandler {
 }
 
 // CreateRole handles the HTTP POST request to create a new role.
+// CreateRole godoc
+// @Summary Create role
+// @Description Create role
+// @Produce json
+// @Tags role
+// @Param request body dto.RoleCreateDTO true "Create Role Request"
+// @Success 201 {object} domain.Role
+// @Router /api/v1/role/ [post]
 func (h *RoleHandler) CreateRole(c *gin.Context) {
 	var input dto.RoleCreateDTO
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -37,6 +45,14 @@ func (h *RoleHandler) CreateRole(c *gin.Context) {
 }
 
 // GetRoleByID handles the HTTP GET request to retrieve a role by its ID.
+// GetRoleByID godoc
+// @Summary Get role by ID
+// @Description Get role by ID
+// @Produce json
+// @Tags role
+// @Param id path int true "Role ID"
+// @Success 200 {object} domain.Role
+// @Router /api/v1/role/{id} [get]
 func (h *RoleHandler) GetRoleByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -54,6 +70,15 @@ func (h *RoleHandler) GetRoleByID(c *gin.Context) {
 }
 
 // UpdateRole handles the HTTP PUT request to update a role.
+// UpdateRole godoc
+// @Summary Update role
+// @Description Update role
+// @Produce json
+// @Tags role
+// @Param id path int true "Role ID"
+// @Param request body dto.RoleUpdateDTO true "Update Role Request"
+// @Success 200 {object} domain.Role
+// @Router /api/v1/role/{id} [put]
 func (h *RoleHandler) UpdateRole(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -77,6 +102,14 @@ func (h *RoleHandler) UpdateRole(c *gin.Context) {
 }
 
 // DeleteRole handles the HTTP DELETE request to delete a role.
+// DeleteRole godoc
+// @Summary Delete role
+// @Description Delete role
+// @Produce json
+// @Tags role
+// @Param id path int true "Role ID"
+// @Success 204
+// @Router /api/v1/role/{id} [delete]
 func (h *RoleHandler) DeleteRole(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
