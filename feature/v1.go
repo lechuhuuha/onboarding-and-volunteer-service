@@ -1,6 +1,8 @@
 package feature
 
 import (
+	"net/http"
+
 	_ "github.com/cesc1802/onboarding-and-volunteer-service/docs"
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 	authStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
@@ -12,7 +14,6 @@ import (
 	userUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/user/usecase"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"net/http"
 
 	appliIdentityStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/storage"
 	appliIdentityTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/transport"
@@ -81,9 +82,9 @@ func RegisterHandlerV1(mono system.Service) {
 	applicant := v1.Group("/applicant")
 	{
 		applicant.POST("/", applicantHandler.CreateApplicant)
-		applicant.PUT("/update/:id", applicantHandler.UpdateApplicant)
+		applicant.PUT("/:id", applicantHandler.UpdateApplicant)
 		applicant.DELETE("/:id", applicantHandler.CreateApplicant)
-		//applicant.GET("/:id")
+		applicant.GET("/:id", applicantHandler.FindApplicantByID)
 	}
 
 	appliRequest := v1.Group("/applicant-request")
@@ -95,7 +96,7 @@ func RegisterHandlerV1(mono system.Service) {
 	{
 		appliIdentity.POST("/", applicantIdentityHandler.CreateUserIdentity)
 		appliIdentity.GET("/:id", applicantIdentityHandler.FindUserIdentity)
-		appliIdentity.POST("/:id", applicantIdentityHandler.UpdateUserIdentity)
+		appliIdentity.PUT("/:id", applicantIdentityHandler.UpdateUserIdentity)
 	}
 
 }
