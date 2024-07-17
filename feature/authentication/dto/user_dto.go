@@ -23,3 +23,18 @@ type LoginUserResponse struct {
 	VerificationStatus int       `json:"verification_status"`
 	Status             int       `json:"status"`
 }
+
+type LoginUserTokenResponse struct {
+	Token string `json:"token"`
+}
+
+type RegisterUserRequest struct {
+	Email      string `json:"email" binding:"required,email"`
+	Name       string `json:"name" binding:"required"`
+	Password   string `json:"password" binding:"required"`
+	RePassword string `json:"re_password" binding:"required"`
+}
+
+type RegisterUserResponse struct {
+	Message string `json:"message"`
+}

@@ -17,6 +17,14 @@ func NewVolunteerHandler(volUsecase usecase.VolunteerUsecaseInterface) *Voluntee
 	return &VolunteerHandler{VolUsecaseH: volUsecase}
 }
 
+// CreateVolunteer godoc
+// @Summary Create volunteer
+// @Description Create volunteer
+// @Produce json
+// @Tags volunteer
+// @Param request body dto.VolunteerCreateDTO true "Create Volunteer Request"
+// @Success 201 {string} message "Volunteer created successfully"
+// @Router /api/v1/volunteer/ [post]
 func (h *VolunteerHandler) CreateVolunteer(c *gin.Context) {
 	var input dto.VolunteerCreateDTO
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -32,6 +40,15 @@ func (h *VolunteerHandler) CreateVolunteer(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 }
 
+// UpdateVolunteer godoc
+// @Summary Update volunteer
+// @Description Update volunteer
+// @Produce json
+// @Tags volunteer
+// @Param id path int true "Volunteer ID"
+// @Param request body dto.VolunteerUpdateDTO true "Update Volunteer Request"
+// @Success 200 {string} message "Volunteer updated successfully"
+// @Router /api/v1/volunteer/{id} [put]
 func (h *VolunteerHandler) UpdateVolunteer(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -53,6 +70,14 @@ func (h *VolunteerHandler) UpdateVolunteer(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Volunteer updated successfully"})
 }
 
+// DeleteVolunteer godoc
+// @Summary Delete volunteer
+// @Description Delete volunteer
+// @Produce json
+// @Tags volunteer
+// @Param id path int true "Volunteer ID"
+// @Success 200 {string} message "Volunteer deleted successfully"
+// @Router /api/v1/volunteer/{id} [delete]
 func (h *VolunteerHandler) DeleteVolunteer(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -68,6 +93,14 @@ func (h *VolunteerHandler) DeleteVolunteer(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Volunteer deleted successfully"})
 }
 
+// FindVolunteerByID godoc
+// @Summary Find volunteer by ID
+// @Description Find volunteer by ID
+// @Produce json
+// @Tags volunteer
+// @Param id path int true "Volunteer ID"
+// @Success 200 {object} domain.Volunteer
+// @Router /api/v1/volunteer/{id} [get]
 func (h *VolunteerHandler) FindVolunteerByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
