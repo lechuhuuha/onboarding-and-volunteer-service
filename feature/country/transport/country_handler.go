@@ -11,11 +11,11 @@ import (
 
 // CountryHandler handles the HTTP requests for countries.
 type CountryHandler struct {
-	usecase *usecase.CountryUsecase
+	usecase usecase.CountryUsecaseInterface
 }
 
 // NewCountryHandler creates a new instance of CountryHandler.
-func NewCountryHandler(usecase *usecase.CountryUsecase) *CountryHandler {
+func NewCountryHandler(usecase usecase.CountryUsecaseInterface) *CountryHandler {
 	return &CountryHandler{usecase: usecase}
 }
 
