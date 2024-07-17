@@ -1,15 +1,18 @@
 package feature
 
 import (
-	"net/http"
-
+	_ "github.com/cesc1802/onboarding-and-volunteer-service/docs"
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 	authStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 	authTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/transport"
 	authUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/usecase"
+	"github.com/cesc1802/onboarding-and-volunteer-service/feature/middleware"
 	userStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/user/storage"
 	userTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/user/transport"
 	userUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/user/usecase"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"net/http"
 
 	appliIdentityStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/storage"
 	appliIdentityTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/transport"
@@ -19,9 +22,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @title Onboarding and Volunteer Service API
+// @version 1.0
+// @description This is a volunteer service API
+// @securityDefinitions.apiKey bearerToken
+// @in header
+// @name Authorization
+// @host localhost:8080
+// @BasePath /api/v1
 func RegisterHandlerV1(mono system.Service) {
 	router := mono.Router()
-
+	secretKey := storage.GetSecretKey()
+	// add swagger
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, map[string]any{
 			"data": "success",
@@ -29,17 +42,16 @@ func RegisterHandlerV1(mono system.Service) {
 	})
 	v1 := router.Group("/api/v1")
 	// Initialize database connection
-	storage.DBContext()
 
 	// Initialize repository
-	authRepo := authStorage.NewAuthenticationRepository(storage.DB)
-	userRepo := userStorage.NewAdminRepository(storage.DB)
-	applicantRepo := userStorage.NewApplicantRepository(storage.DB)
-	applicantRequestRepo := userStorage.NewApplicantRequestRepository(storage.DB)
-	applicantIdentityRepo := appliIdentityStorage.NewUserIdentityRepository(storage.DB)
+	authRepo := authStorage.NewAuthenticationRepository(mono.DB())
+	userRepo := userStorage.NewAdminRepository(mono.DB())
+	applicantRepo := userStorage.NewApplicantRepository(mono.DB())
+	applicantRequestRepo := userStorage.NewApplicantRequestRepository(mono.DB())
+	applicantIdentityRepo := appliIdentityStorage.NewUserIdentityRepository(mono.DB())
 
 	// Initialize usecase
-	authUseCase := authUsecase.NewUserUsecase(authRepo)
+	authUseCase := authUsecase.NewUserUsecase(authRepo, secretKey)
 	userUseCase := userUsecase.NewAdminUsecase(userRepo)
 	applicantUseCase := userUsecase.NewApplicantUsecase(applicantRepo)
 	applicantRequestUseCase := userUsecase.NewApplicantRequestUsecase(applicantRequestRepo)
@@ -56,12 +68,13 @@ func RegisterHandlerV1(mono system.Service) {
 	{
 		auth.POST("/login", authHandler.Login)
 
-		auth.POST("/register", func(c *gin.Context) {
-
-		})
+		//auth.POST("/register", func(c *gin.Context) {
+		//
+		//})
 	}
 
 	admin := v1.Group("/admin")
+	admin.Use(middleware.AuthMiddleware(secretKey))
 	{
 		admin.GET("/list-request", userHandler.GetListRequest)
 		admin.GET("/request/:id", userHandler.GetRequestById)
@@ -76,7 +89,7 @@ func RegisterHandlerV1(mono system.Service) {
 		applicant.POST("/", applicantHandler.CreateApplicant)
 		applicant.PUT("/update/:id", applicantHandler.UpdateApplicant)
 		applicant.DELETE("/:id", applicantHandler.CreateApplicant)
-		applicant.GET("/:id")
+		//applicant.GET("/:id")
 	}
 
 	appliRequest := v1.Group("/applicant-request")

@@ -23,3 +23,7 @@ type LoginUserResponse struct {
 	VerificationStatus int       `json:"verification_status"`
 	Status             int       `json:"status"`
 }
+
+type LoginUserTokenResponse struct {
+	Token string `json:"token"`
+}

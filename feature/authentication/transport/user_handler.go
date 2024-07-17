@@ -14,6 +14,15 @@ type AuthenticationHandler struct {
 func NewAuthenticationHandler(usecase *usecase.UserUsecase) *AuthenticationHandler {
 	return &AuthenticationHandler{usecase: usecase}
 }
+
+// Login godoc
+// @Summary Login
+// @Description Login
+// @Produce json
+// @Tags authentication
+// @Param loginUserRequest body dto.LoginUserRequest true "Login User Request"
+// @Success 200 {object} dto.LoginUserResponse{}
+// @Router /api/v1/auth/login [post]
 func (h *AuthenticationHandler) Login(c *gin.Context) {
 	var req dto.LoginUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
