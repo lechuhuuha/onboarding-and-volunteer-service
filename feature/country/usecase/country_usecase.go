@@ -8,53 +8,57 @@ import (
 
 // CountryUsecaseInterface defines the methods that any use case implementation must provide.
 type CountryUsecaseInterface interface {
-	CreateCountry(input dto.CountryCreateDTO) (*domain.Country, error)
-	GetCountryByID(id uint) (*domain.Country, error)
-	UpdateCountry(id uint, input dto.CountryUpdateDTO) (*domain.Country, error)
+	CreateCountry(input dto.CountryCreateDTO) error
+	GetCountryByID(id uint) (*dto.CountryResponseDTO, error)
+	UpdateCountry(id uint, input dto.CountryUpdateDTO) error
 	DeleteCountry(id uint) error
 }
 
 // CountryUsecase handles the business logic for countries.
 type CountryUsecase struct {
-	repo storage.CountryRepositoryInterface
+	CountryRepo storage.CountryRepositoryInterface
 }
 
 // NewCountryUsecase creates a new instance of CountryUsecase.
-func NewCountryUsecase(repo storage.CountryRepositoryInterface) *CountryUsecase {
-	return &CountryUsecase{repo: repo}
+func NewCountryUsecase(CountryRepo storage.CountryRepositoryInterface) *CountryUsecase {
+	return &CountryUsecase{CountryRepo: CountryRepo}
 }
 
 // CreateCountry creates a new country using the provided DTO.
-func (u *CountryUsecase) CreateCountry(input dto.CountryCreateDTO) (*domain.Country, error) {
+func (u *CountryUsecase) CreateCountry(input dto.CountryCreateDTO) error {
 	country := &domain.Country{
 		Name:   input.Name,
 		Status: input.Status,
 	}
-	err := u.repo.Create(country)
-	return country, err
+	err := u.CountryRepo.Create(country)
+	return err
 }
 
 // GetCountryByID retrieves a country by its ID.
-func (u *CountryUsecase) GetCountryByID(id uint) (*domain.Country, error) {
-	return u.repo.GetByID(id)
-}
-
-// UpdateCountry updates a country using the provided DTO.
-func (u *CountryUsecase) UpdateCountry(id uint, input dto.CountryUpdateDTO) (*domain.Country, error) {
-	country, err := u.repo.GetByID(id)
+func (u *CountryUsecase) GetCountryByID(id uint) (*dto.CountryResponseDTO, error) {
+	country, err := u.CountryRepo.GetByID(id)
 	if err != nil {
 		return nil, err
 	}
+	response := &dto.CountryResponseDTO{
+		Name:   country.Name,
+		Status: country.Status,
+	}
+	return response, nil
+}
+
+// UpdateCountry updates a country using the provided DTO.
+func (u *CountryUsecase) UpdateCountry(id uint, input dto.CountryUpdateDTO) error {
+	country, err := u.CountryRepo.GetByID(id)
+	if err != nil {
+		return err
+	}
 	country.Name = input.Name
 	country.Status = input.Status
-	err = u.repo.Update(country)
-	return country, err
+	return u.CountryRepo.Update(country)
 }
 
 // DeleteCountry deletes a country by its ID.
 func (u *CountryUsecase) DeleteCountry(id uint) error {
-	return u.repo.Delete(id)
+	return u.CountryRepo.Delete(id)
 }
-
-// Ensure CountryUsecase implements CountryUsecaseInterface
-var _ CountryUsecaseInterface = (*CountryUsecase)(nil)

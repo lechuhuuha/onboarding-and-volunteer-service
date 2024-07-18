@@ -36,13 +36,13 @@ func (h *CountryHandler) CreateCountry(c *gin.Context) {
 		return
 	}
 
-	country, err := h.usecase.CreateCountry(input)
+	err := h.usecase.CreateCountry(input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, country)
+	c.JSON(http.StatusCreated, gin.H{"message": "Country created successfully"})
 }
 
 // GetCountryByID handles the HTTP GET request to retrieve a country by its ID.
@@ -94,13 +94,12 @@ func (h *CountryHandler) UpdateCountry(c *gin.Context) {
 		return
 	}
 
-	country, err := h.usecase.UpdateCountry(uint(id), input)
-	if err != nil {
+	if err := h.usecase.UpdateCountry(uint(id), input); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, country)
+	c.JSON(http.StatusOK, gin.H{"message": "Country updated successfully"})
 }
 
 // DeleteCountry handles the HTTP DELETE request to delete a country.
