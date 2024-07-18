@@ -111,7 +111,7 @@ func RegisterHandlerV1(mono system.Service) {
 	volunteer := v1.Group("/volunteer")
 	{
 		volunteer.POST("/", volunteerHandler.CreateVolunteer)
-		volunteer.PUT("/update/:id", volunteerHandler.UpdateVolunteer)
+		volunteer.PUT("/:id", volunteerHandler.UpdateVolunteer)
 		volunteer.DELETE("/:id",volunteerHandler.DeleteVolunteer)
 		volunteer.GET("/:id", volunteerHandler.FindVolunteerByID)
 	}
