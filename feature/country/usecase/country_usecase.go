@@ -6,13 +6,21 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/storage"
 )
 
+// CountryUsecaseInterface defines the methods that any use case implementation must provide.
+type CountryUsecaseInterface interface {
+	CreateCountry(input dto.CountryCreateDTO) (*domain.Country, error)
+	GetCountryByID(id uint) (*domain.Country, error)
+	UpdateCountry(id uint, input dto.CountryUpdateDTO) (*domain.Country, error)
+	DeleteCountry(id uint) error
+}
+
 // CountryUsecase handles the business logic for countries.
 type CountryUsecase struct {
-	repo *storage.CountryRepository
+	repo storage.CountryRepositoryInterface
 }
 
 // NewCountryUsecase creates a new instance of CountryUsecase.
-func NewCountryUsecase(repo *storage.CountryRepository) *CountryUsecase {
+func NewCountryUsecase(repo storage.CountryRepositoryInterface) *CountryUsecase {
 	return &CountryUsecase{repo: repo}
 }
 
@@ -47,3 +55,6 @@ func (u *CountryUsecase) UpdateCountry(id uint, input dto.CountryUpdateDTO) (*do
 func (u *CountryUsecase) DeleteCountry(id uint) error {
 	return u.repo.Delete(id)
 }
+
+// Ensure CountryUsecase implements CountryUsecaseInterface
+var _ CountryUsecaseInterface = (*CountryUsecase)(nil)
