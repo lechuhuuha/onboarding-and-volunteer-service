@@ -1,17 +1,21 @@
-# Onboarding and Volunteer Service
+ # Onboarding and Volunteer Service
 
 This repository contains the codebase for the Onboarding and Volunteer Service application. The application is built using the Go programming language with the Gin web framework, GORM ORM, and PostgreSQL database. It aims to streamline the process of onboarding and managing volunteers, providing functionality for managing 2 kinds of user: applicant and volunteer.
 
 ## Table of contents
-    - [Project Structure](#project-structure)
-    - [Installation](#installation)
-    - [Configuration](#configuration)
-    - [Usage](#usage)
-    - [User story](#user-story)
-    - [API Endpoints "/api/v1"](#api-endpoints-apiv1)
-    - [Contributing](#contributing)
-    - [License](#license)
-
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [User story](#user-story)
+- [API Endpoints "/api/v1"](#api-endpoints-apiv1)
+  - [Admin Endpoints: "/admin"](#admin-endpoints-admin)
+  - [User Endpoints: "/applicant"](#user-endpoints-applicant)
+  - [Application Request Endpoints:"/applicant-request"](#application-request-endpointsapplicant-request)
+  - [User Identity Endpoints: "/applicant-identity"](#user-identity-endpoints-applicant-identity)
+- [Contributing](#contributing)
+- [License](#license)
+  
 ### Project Structure
 The project follows a modular structure with clearly defined folders:
 ├───cmd
@@ -20,55 +24,14 @@ The project follows a modular structure with clearly defined folders:
 ├───deployment
 ├───docs
 ├───feature
-│   ├───authentication
-│   │   ├───domain
-│   │   ├───dto
-│   │   ├───storage
-│   │   ├───transport
-│   │   └───usecase
-│   ├───country
-│   │   ├───domain
-│   │   ├───dto
-│   │   ├───storage
-│   │   ├───transport
-│   │   └───usecase
+│   ├───country  
 │   ├───department
-│   │   ├───domain
-│   │   ├───dto
-│   │   ├───storage
-│   │   ├───transport
-│   │   └───usecase
 │   ├───middleware
-│   ├───request
-│   │   ├───domain
-│   │   ├───dto
-│   │   ├───storage
-│   │   ├───transport
-│   │   └───usecase
+│   ├───request  │ 
 │   ├───role
-│   │   ├───domain
-│   │   ├───dto
-│   │   ├───storage
-│   │   ├───transport
-│   │   └───usecase
 │   ├───user
-│   │   ├───domain
-│   │   ├───dto
-│   │   ├───storage
-│   │   ├───transport
-│   │   └───usecase
 │   ├───user_identity
-│   │   ├───domain
-│   │   ├───dto
-│   │   ├───storage
-│   │   ├───transport
-│   │   └───usecase
 │   └───volunteer
-│       ├───domain
-│       ├───dto
-│       ├───storage
-│       ├───transport
-│       └───usecase
 └───migration
 
 ### Installation
