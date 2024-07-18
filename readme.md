@@ -3,6 +3,7 @@
 This repository contains the codebase for the Onboarding and Volunteer Service application. The application is built using the Go programming language with the Gin web framework, GORM ORM, and PostgreSQL database. It aims to streamline the process of onboarding and managing volunteers, providing functionality for managing 2 kinds of user: applicant and volunteer.
 
 ## Table of contents
+
 - [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -18,21 +19,21 @@ This repository contains the codebase for the Onboarding and Volunteer Service a
   
 ### Project Structure
 The project follows a modular structure with clearly defined folders:
-├───cmd
-│   ├───migration
-│   └───server
-├───deployment
-├───docs
-├───feature
-│   ├───country  
-│   ├───department
-│   ├───middleware
-│   ├───request  │ 
-│   ├───role
-│   ├───user
-│   ├───user_identity
-│   └───volunteer
-└───migration
+├───cmd  
+│   ├───migration  
+│   └───server  
+├───deployment  
+├───docs  
+├───feature  
+│   ├───country    
+│   ├───department  
+│   ├───middleware  
+│   ├───request  
+│   ├───role  
+│   ├───user  
+│   ├───user_identity  
+│   └───volunteer  
+└───migration  
 
 ### Installation
 To get started with the Onboarding and Volunteer Service application, follow these steps:
