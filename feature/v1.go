@@ -63,7 +63,7 @@ func RegisterHandlerV1(mono system.Service) {
 	authHandler := authTransport.NewAuthenticationHandler(authUseCase)
 	userHandler := userTransport.NewAuthenticationHandler(userUseCase)
 	applicantHandler := userTransport.NewApplicantHandler(applicantUseCase)
-	applicantRequestHandler := userTransport.NewRequestHandler(applicantRequestUseCase)
+	applicantRequestHandler := userTransport.NewApplicantRequestHandler(applicantRequestUseCase)
 	applicantIdentityHandler := appliIdentityTransport.NewUserIdentityHandler(applicantIdenityUseCase)
 	volunteerHandler := volunteerTransport.NewVolunteerHandler(volunteerUseCase)
 	volunteerRequestHandler := userTransport.NewVolunteerRequestHandler(volunteerRequestUseCase)
@@ -98,7 +98,7 @@ func RegisterHandlerV1(mono system.Service) {
 
 	appliRequest := v1.Group("/applicant-request")
 	{
-		appliRequest.POST("/", applicantRequestHandler.CreateRequest)
+		appliRequest.POST("/", applicantRequestHandler.CreateApplicantRequest)
 	}
 
 	appliIdentity := v1.Group("applicant-identity")
@@ -118,6 +118,6 @@ func RegisterHandlerV1(mono system.Service) {
 
 	volRequest := v1.Group("/volunteer-request")
 	{
-		volRequest.POST("/", volunteerRequestHandler.CreateRequest)
+		volRequest.POST("/", volunteerRequestHandler.CreateVolunteerRequest)
 	}
 }
