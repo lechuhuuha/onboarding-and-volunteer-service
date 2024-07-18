@@ -6,11 +6,15 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/storage"
 )
 
-type ApplicantRequestUsecase struct {
-	RequestRepo *storage.ApplicantRequestRepository
+type ApplicantRequestUsecaseInterface interface {
+	CreateRequest(request dto.ApplicantRequestCreatingDTO) error
 }
 
-func NewApplicantRequestUsecase(requestRepo *storage.ApplicantRequestRepository) *ApplicantRequestUsecase {
+type ApplicantRequestUsecase struct {
+	RequestRepo storage.ApplicantRequestRepositoryInterface
+}
+
+func NewApplicantRequestUsecase(requestRepo storage.ApplicantRequestRepositoryInterface) *ApplicantRequestUsecase {
 	return &ApplicantRequestUsecase{RequestRepo: requestRepo}
 }
 

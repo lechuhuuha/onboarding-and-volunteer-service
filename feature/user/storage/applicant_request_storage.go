@@ -6,6 +6,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type ApplicantRequestRepositoryInterface interface {
+	CreateApplicantRequest(request *domain.ApplicantRequestDomain) error
+}
+
 type ApplicantRequestRepository struct {
 	DB *gorm.DB
 }

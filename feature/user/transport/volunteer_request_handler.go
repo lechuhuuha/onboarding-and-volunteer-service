@@ -9,10 +9,10 @@ import (
 )
 
 type VolunteerRequestHandler struct {
-	VolRequestUsecase *usecase.VolunteerRequestUsecase
+	VolRequestUsecase usecase.VolunteerRequestUsecaseInterface
 }
 
-func NewVolunteerRequestHandler(volRequestUsecase *usecase.VolunteerRequestUsecase) *VolunteerRequestHandler {
+func NewVolunteerRequestHandler(volRequestUsecase usecase.VolunteerRequestUsecaseInterface) *VolunteerRequestHandler {
 	return &VolunteerRequestHandler{VolRequestUsecase: volRequestUsecase}
 }
 

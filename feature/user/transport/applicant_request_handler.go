@@ -10,10 +10,10 @@ import (
 )
 
 type RequestHandler struct {
-	RequestUsecase *usecase.ApplicantRequestUsecase
+	RequestUsecase usecase.ApplicantRequestUsecaseInterface
 }
 
-func NewRequestHandler(requestUsecase *usecase.ApplicantRequestUsecase) *RequestHandler {
+func NewRequestHandler(requestUsecase usecase.ApplicantRequestUsecaseInterface) *RequestHandler {
 	return &RequestHandler{RequestUsecase: requestUsecase}
 }
 
