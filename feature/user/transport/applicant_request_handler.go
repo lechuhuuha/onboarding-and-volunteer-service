@@ -32,7 +32,7 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 		return
 	}
 
-	if err := h.RequestUsecase.CreateRequest(request); err != nil {
+	if err := h.RequestUsecase.CreateApplicantRequest(request); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

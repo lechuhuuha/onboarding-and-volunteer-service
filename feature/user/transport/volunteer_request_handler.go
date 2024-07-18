@@ -32,7 +32,7 @@ func (h *VolunteerRequestHandler) CreateRequest(c *gin.Context) {
 		return
 	}
 
-	if err := h.VolRequestUsecase.CreateRequest(request); err != nil {
+	if err := h.VolRequestUsecase.CreateVolunteerRequest(request); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

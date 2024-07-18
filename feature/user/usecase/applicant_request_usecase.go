@@ -7,7 +7,7 @@ import (
 )
 
 type ApplicantRequestUsecaseInterface interface {
-	CreateRequest(request dto.ApplicantRequestCreatingDTO) error
+	CreateApplicantRequest(request dto.ApplicantRequestCreatingDTO) error
 }
 
 type ApplicantRequestUsecase struct {
@@ -18,7 +18,7 @@ func NewApplicantRequestUsecase(requestRepo storage.ApplicantRequestRepositoryIn
 	return &ApplicantRequestUsecase{RequestRepo: requestRepo}
 }
 
-func (u *ApplicantRequestUsecase) CreateRequest(request dto.ApplicantRequestCreatingDTO) error {
+func (u *ApplicantRequestUsecase) CreateApplicantRequest(request dto.ApplicantRequestCreatingDTO) error {
 	req := &domain.ApplicantRequestDomain{
 		UserID: request.UserID,
 		Type:   request.Type,

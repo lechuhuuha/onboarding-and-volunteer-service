@@ -6,7 +6,7 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/storage"
 )
 type VolunteerRequestUsecaseInterface interface {
-	CreateRequest(request dto.VoluteerRequestCreatingDTO) error
+	CreateVolunteerRequest(request dto.VoluteerRequestCreatingDTO) error
 }
 
 type VolunteerRequestUsecase struct {
@@ -17,7 +17,7 @@ func NewVolunteerRequestUsecase(volRequestRepo storage.VolunteerRequestRepositor
 	return &VolunteerRequestUsecase{VolRequestRepo: volRequestRepo}
 }
 
-func (u *VolunteerRequestUsecase) CreateRequest(request dto.VoluteerRequestCreatingDTO) error {
+func (u *VolunteerRequestUsecase) CreateVolunteerRequest(request dto.VoluteerRequestCreatingDTO) error {
 	req := &domain.VolunteerRequest{
 		UserID: request.UserID,
 		Type:   request.Type,
