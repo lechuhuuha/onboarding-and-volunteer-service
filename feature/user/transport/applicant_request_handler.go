@@ -10,10 +10,10 @@ import (
 )
 
 type RequestHandler struct {
-	RequestUsecase *usecase.ApplicantRequestUsecase
+	RequestUsecase usecase.ApplicantRequestUsecaseInterface
 }
 
-func NewRequestHandler(requestUsecase *usecase.ApplicantRequestUsecase) *RequestHandler {
+func NewApplicantRequestHandler(requestUsecase usecase.ApplicantRequestUsecaseInterface) *RequestHandler {
 	return &RequestHandler{RequestUsecase: requestUsecase}
 }
 
@@ -25,14 +25,14 @@ func NewRequestHandler(requestUsecase *usecase.ApplicantRequestUsecase) *Request
 // @Param request body dto.ApplicantRequestCreatingDTO true "Create Request Request"
 // @Success 201 {string} message "Request created successfully"
 // @Router /api/v1/applicant-request/ [post]
-func (h *RequestHandler) CreateRequest(c *gin.Context) {
+func (h *RequestHandler) CreateApplicantRequest(c *gin.Context) {
 	var request dto.ApplicantRequestCreatingDTO
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := h.RequestUsecase.CreateRequest(request); err != nil {
+	if err := h.RequestUsecase.CreateApplicantRequest(request); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

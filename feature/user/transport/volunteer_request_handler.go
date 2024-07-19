@@ -9,10 +9,10 @@ import (
 )
 
 type VolunteerRequestHandler struct {
-	VolRequestUsecase *usecase.VolunteerRequestUsecase
+	VolRequestUsecase usecase.VolunteerRequestUsecaseInterface
 }
 
-func NewVolunteerRequestHandler(volRequestUsecase *usecase.VolunteerRequestUsecase) *VolunteerRequestHandler {
+func NewVolunteerRequestHandler(volRequestUsecase usecase.VolunteerRequestUsecaseInterface) *VolunteerRequestHandler {
 	return &VolunteerRequestHandler{VolRequestUsecase: volRequestUsecase}
 }
 
@@ -25,14 +25,14 @@ func NewVolunteerRequestHandler(volRequestUsecase *usecase.VolunteerRequestUseca
 // @Param request body dto.VoluteerRequestCreatingDTO true "Request body"
 // @Success 201 {object} string
 // @Router /api/v1/volunteer/request [post]
-func (h *VolunteerRequestHandler) CreateRequest(c *gin.Context) {
+func (h *VolunteerRequestHandler) CreateVolunteerRequest(c *gin.Context) {
 	var request dto.VoluteerRequestCreatingDTO
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := h.VolRequestUsecase.CreateRequest(request); err != nil {
+	if err := h.VolRequestUsecase.CreateVolunteerRequest(request); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

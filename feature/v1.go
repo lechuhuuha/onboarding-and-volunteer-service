@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	_ "github.com/cesc1802/onboarding-and-volunteer-service/docs"
-	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 	authStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 	authTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/transport"
 	authUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/usecase"
@@ -19,6 +18,10 @@ import (
 	appliIdentityTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/transport"
 	appliIdentityUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/usecase"
 
+	volunteerStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/volunteer/storage"
+	volunteerTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/volunteer/transport"
+	volunteerUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/volunteer/usecase"
+
 	"github.com/cesc1802/share-module/system"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -28,7 +31,7 @@ import (
 // @BasePath /api/v1
 func RegisterHandlerV1(mono system.Service) {
 	router := mono.Router()
-	secretKey := storage.GetSecretKey()
+	secretKey := authStorage.GetSecretKey()
 	router.Use(cors.Default())
 	// add swagger
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -44,6 +47,8 @@ func RegisterHandlerV1(mono system.Service) {
 	applicantRepo := userStorage.NewApplicantRepository(mono.DB())
 	applicantRequestRepo := userStorage.NewApplicantRequestRepository(mono.DB())
 	applicantIdentityRepo := appliIdentityStorage.NewUserIdentityRepository(mono.DB())
+	volunteerRepo := volunteerStorage.NewVolunteerRepository(mono.DB())
+	volunteerRequestRepo := userStorage.NewVolunteerRequestRepository(mono.DB())
 
 	// Initialize usecase
 	authUseCase := authUsecase.NewUserUsecase(authRepo, secretKey)
@@ -51,13 +56,17 @@ func RegisterHandlerV1(mono system.Service) {
 	applicantUseCase := userUsecase.NewApplicantUsecase(applicantRepo)
 	applicantRequestUseCase := userUsecase.NewApplicantRequestUsecase(applicantRequestRepo)
 	applicantIdenityUseCase := appliIdentityUsecase.NewUserIdentityUsecase(applicantIdentityRepo)
+	volunteerUseCase := volunteerUsecase.NewVolunteerUsecase(volunteerRepo)
+	volunteerRequestUseCase := userUsecase.NewVolunteerRequestUsecase(volunteerRequestRepo)
 
 	// Initialize handler
 	authHandler := authTransport.NewAuthenticationHandler(authUseCase)
 	userHandler := userTransport.NewAuthenticationHandler(userUseCase)
 	applicantHandler := userTransport.NewApplicantHandler(applicantUseCase)
-	applicantRequestHandler := userTransport.NewRequestHandler(applicantRequestUseCase)
+	applicantRequestHandler := userTransport.NewApplicantRequestHandler(applicantRequestUseCase)
 	applicantIdentityHandler := appliIdentityTransport.NewUserIdentityHandler(applicantIdenityUseCase)
+	volunteerHandler := volunteerTransport.NewVolunteerHandler(volunteerUseCase)
+	volunteerRequestHandler := userTransport.NewVolunteerRequestHandler(volunteerRequestUseCase)
 
 	auth := v1.Group("/auth")
 	{
@@ -83,13 +92,13 @@ func RegisterHandlerV1(mono system.Service) {
 	{
 		applicant.POST("/", applicantHandler.CreateApplicant)
 		applicant.PUT("/:id", applicantHandler.UpdateApplicant)
-		applicant.DELETE("/:id", applicantHandler.CreateApplicant)
+		applicant.DELETE("/:id", applicantHandler.DeleteApplicant)
 		applicant.GET("/:id", applicantHandler.FindApplicantByID)
 	}
 
 	appliRequest := v1.Group("/applicant-request")
 	{
-		appliRequest.POST("/", applicantRequestHandler.CreateRequest)
+		appliRequest.POST("/", applicantRequestHandler.CreateApplicantRequest)
 	}
 
 	appliIdentity := v1.Group("applicant-identity")
@@ -99,4 +108,16 @@ func RegisterHandlerV1(mono system.Service) {
 		appliIdentity.PUT("/:id", applicantIdentityHandler.UpdateUserIdentity)
 	}
 
+	volunteer := v1.Group("/volunteer")
+	{
+		volunteer.POST("/", volunteerHandler.CreateVolunteer)
+		volunteer.PUT("/:id", volunteerHandler.UpdateVolunteer)
+		volunteer.DELETE("/:id",volunteerHandler.DeleteVolunteer)
+		volunteer.GET("/:id", volunteerHandler.FindVolunteerByID)
+	}
+
+	volRequest := v1.Group("/volunteer-request")
+	{
+		volRequest.POST("/", volunteerRequestHandler.CreateVolunteerRequest)
+	}
 }
