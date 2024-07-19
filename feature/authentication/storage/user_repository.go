@@ -6,16 +6,21 @@ import (
 	"gorm.io/gorm"
 )
 
+type AuthenticationSrore interface {
+	GetUserByEmail(email string, password string) (*domain.User, string)
+	RegisterUser(request *dto.RegisterUserRequest) (*dto.RegisterUserResponse, error)
+}
+
 type AuthenticationRepository struct {
-	DB *gorm.DB
+	db *gorm.DB
 }
 
 func NewAuthenticationRepository(db *gorm.DB) *AuthenticationRepository {
-	return &AuthenticationRepository{DB: db}
+	return &AuthenticationRepository{db: db}
 }
 func (r *AuthenticationRepository) GetUserByEmail(email string, password string) (*domain.User, string) {
 	var user domain.User
-	err := r.DB.Where("email = ?", email).First(&user).Error
+	err := r.db.Where("email = ?", email).First(&user).Error
 	if err != nil {
 		return nil, err.Error()
 	}
@@ -36,7 +41,7 @@ func (r *AuthenticationRepository) RegisterUser(request *dto.RegisterUserRequest
 		Status:   1,
 	}
 
-	if err := r.DB.Create(&user).Error; err != nil {
+	if err := r.db.Create(&user).Error; err != nil {
 		return nil, err
 	}
 
