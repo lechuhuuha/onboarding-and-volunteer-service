@@ -5,6 +5,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// CountryRepositoryInterface defines the methods that any repository implementation must provide.
+type CountryRepositoryInterface interface {
+	Create(country *domain.Country) error
+	GetByID(id uint) (*domain.Country, error)
+	Update(country *domain.Country) error
+	Delete(id uint) error
+}
+
 // CountryRepository handles the CRUD operations with the database.
 type CountryRepository struct {
 	DB *gorm.DB

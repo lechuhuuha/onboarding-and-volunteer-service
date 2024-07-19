@@ -6,6 +6,14 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/volunteer/domain"
 )
 
+// VolunteerRepositoryInterface defines the methods that a VolunteerRepository should implement
+type VolunteerRepositoryInterface interface {
+	CreateVolunteer(volunteer *domain.Volunteer) error
+	UpdateVolunteer(volunteer *domain.Volunteer) error
+	DeleteVolunteer(id int) error
+	FindVolunteerByID(id int) (*domain.Volunteer, error)
+}
+
 type VolunteerRepository struct {
 	DB *gorm.DB
 }
