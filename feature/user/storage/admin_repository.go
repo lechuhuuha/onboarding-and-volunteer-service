@@ -106,7 +106,7 @@ func (r *AdminRepository) ApproveRequest(id int, verifier_id int) string {
 		departmentID := r.getDeptIdFromUser(userID)
 		volunteerDetail := domain.VolunteerDetail{
 			UserID:       userID,
-			DepartmentID: departmentID,
+			DepartmentID: *departmentID,
 			Status:       1,
 		}
 		result = r.db.Create(&volunteerDetail)
@@ -145,7 +145,7 @@ func (r *AdminRepository) getRequestByRequestID(requestID int) *domain.Request {
 	return request
 }
 
-func (r *AdminRepository) getDeptIdFromUser(id uint) int {
+func (r *AdminRepository) getDeptIdFromUser(id uint) *int {
 	var user domain.User
 	r.db.First(&user, id)
 	return user.DepartmentID

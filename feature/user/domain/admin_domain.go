@@ -5,7 +5,7 @@ import "time"
 type User struct {
 	ID                 int       `gorm:"primaryKey"`
 	RoleID             int       `gorm:"index"`
-	DepartmentID       int       `gorm:"index"`
+	DepartmentID       *int      `gorm:"index"`
 	Email              string    `gorm:"unique;not null"`
 	Password           string    `gorm:"not null"`
 	Name               string    `gorm:"not null"`
