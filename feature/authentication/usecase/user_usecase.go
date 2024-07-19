@@ -7,12 +7,17 @@ import (
 	"time"
 )
 
+type UserUsecaseInterface interface {
+	Login(req dto.LoginUserRequest) (*dto.LoginUserTokenResponse, string)
+	RegisterUser(req dto.RegisterUserRequest) (*dto.RegisterUserResponse, string)
+}
+
 type UserUsecase struct {
-	repo      *storage.AuthenticationRepository
+	repo      storage.AuthenticationSrore
 	secretKey string
 }
 
-func NewUserUsecase(repo *storage.AuthenticationRepository, secretKey string) *UserUsecase {
+func NewUserUsecase(repo storage.AuthenticationSrore, secretKey string) *UserUsecase {
 	return &UserUsecase{repo: repo,
 		secretKey: secretKey}
 }

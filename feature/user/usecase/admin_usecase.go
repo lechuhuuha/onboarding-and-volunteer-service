@@ -5,11 +5,22 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/storage"
 )
 
-type AdminUsecase struct {
-	repo *storage.AdminRepository
+type AdminUsecaseInterface interface {
+	GetListPendingRequest() (*dto.ListRequest, string)
+	GetPendingRequestById(id int) (*dto.RequestResponse, string)
+	GetListRequest() (*dto.ListRequest, string)
+	GetRequestById(id int) (*dto.RequestResponse, string)
+	ApproveRequest(id int, verifier_id int) string
+	RejectRequest(id int, verifier_id int) string
+	AddRejectNotes(id int, notes string) string
+	DeleteRequest(id int) string
 }
 
-func NewAdminUsecase(repo *storage.AdminRepository) *AdminUsecase {
+type AdminUsecase struct {
+	repo storage.AdminRepositoryInterface
+}
+
+func NewAdminUsecase(repo storage.AdminRepositoryInterface) *AdminUsecase {
 	return &AdminUsecase{repo: repo}
 }
 func (u *AdminUsecase) GetListPendingRequest() (*dto.ListRequest, string) {

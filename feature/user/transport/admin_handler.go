@@ -9,10 +9,10 @@ import (
 )
 
 type AdminHandler struct {
-	usecase *usecase.AdminUsecase
+	usecase usecase.AdminUsecaseInterface
 }
 
-func NewAuthenticationHandler(usecase *usecase.AdminUsecase) *AdminHandler {
+func NewAuthenticationHandler(usecase usecase.AdminUsecaseInterface) *AdminHandler {
 	return &AdminHandler{usecase: usecase}
 }
 
