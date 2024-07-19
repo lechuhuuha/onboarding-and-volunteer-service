@@ -2,10 +2,10 @@ package domain
 
 import "time"
 
-type Admin struct {
+type User struct {
 	ID                 int       `gorm:"primaryKey"`
 	RoleID             int       `gorm:"index"`
-	DepartmentID       *int      `gorm:"index"`
+	DepartmentID       int       `gorm:"index"`
 	Email              string    `gorm:"unique;not null"`
 	Password           string    `gorm:"not null"`
 	Name               string    `gorm:"not null"`
@@ -31,4 +31,13 @@ type Request struct {
 	VerifierID  int       `gorm:"index"`
 	CreatedAt   time.Time `gorm:"autoCreateTime"`
 	UpdatedAt   time.Time `gorm:"autoUpdateTime"`
+}
+
+type VolunteerDetail struct {
+	ID           int       `gorm:"primaryKey"`
+	UserID       uint      `gorm:"index"`
+	DepartmentID int       `gorm:"index"`
+	Status       int       `gorm:"not null"`
+	CreatedAt    time.Time `gorm:"autoCreateTime"`
+	UpdatedAt    time.Time `gorm:"autoUpdateTime"`
 }
