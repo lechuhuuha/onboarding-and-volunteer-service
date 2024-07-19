@@ -11,10 +11,10 @@ import (
 )
 
 type ApplicantHandler struct {
-	ApplicantUseCaseH *usecase.ApplicantUsecase
+	ApplicantUseCaseH usecase.ApplicantUsecaseInterface
 }
 
-func NewApplicantHandler(userUsecase *usecase.ApplicantUsecase) *ApplicantHandler {
+func NewApplicantHandler(userUsecase usecase.ApplicantUsecaseInterface) *ApplicantHandler {
 	return &ApplicantHandler{ApplicantUseCaseH: userUsecase}
 }
 

@@ -8,11 +8,18 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user/storage"
 )
 
-type ApplicantUsecase struct {
-	ApplicantRepo *storage.ApplicantRepository
+type ApplicantUsecaseInterface interface {
+	CreateApplicant(request dto.ApplicantCreateDTO) error
+	UpdateApplicant(id int, request dto.AppplicantUpdateDTO) error
+	DeleteApplicant(id int) error
+	FindApplicantByID(id int) (*dto.ApplicantResponseDTO, error)
 }
 
-func NewApplicantUsecase(userRepo *storage.ApplicantRepository) *ApplicantUsecase {
+type ApplicantUsecase struct {
+	ApplicantRepo storage.ApplicantRepositoryInterface
+}
+
+func NewApplicantUsecase(userRepo storage.ApplicantRepositoryInterface) *ApplicantUsecase {
 	return &ApplicantUsecase{ApplicantRepo: userRepo}
 }
 
