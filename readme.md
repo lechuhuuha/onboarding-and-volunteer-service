@@ -5,6 +5,7 @@ This repository contains the codebase for the Onboarding and Volunteer Service a
 ## Table of contents
 
 - [Project Structure](#project-structure)
+- [Alternative deployment: DOCKER](#alternative-deployment-docker)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
@@ -17,8 +18,8 @@ This repository contains the codebase for the Onboarding and Volunteer Service a
 - [Contributing](#contributing)
 - [License](#license)
   
-### Project Structure
-The project follows a modular structure with clearly defined folders:
+### Project Structure  
+The project follows a modular structure with clearly defined folders:  
 ├───cmd  
 │   ├───migration  
 │   └───server  
@@ -34,6 +35,77 @@ The project follows a modular structure with clearly defined folders:
 │   ├───user_identity  
 │   └───volunteer  
 └───migration  
+
+### Alternative deployment: DOCKER  
+Inside this project has a deployment folder including Dockerfile and docker-compose. 
+
+Environment Variables:  
+Ensure you have a .env file in the root directory of your project with the following environment variables:
+
+DB.USER=your_postgres_user  
+DB.PASSWORD=your_postgres_password  
+DB.NAME=your_database_name  
+DB.HOST=your_database_host  
+PGADMIN_DEFAULT_EMAIL=your_pgadmin_email  
+PGADMIN_DEFAULT_PASSWORD=your_pgadmin_password 
+
+
+Docker Compose  
+To start the application and all related services, use the following command:  
+
+    docker-compose up --build
+This command will:
+
+Build the Go application.  
+Start the PostgreSQL database.  
+Start the PgAdmin service. 
+
+Accessing Services  
+
+Go Application: The application will be available at http://localhost:8080.  
+PgAdmin: Access PgAdmin at http://localhost:5050. Use the email and password provided in the .env file to log in.  
+PostgreSQL Database: The database will be running on port 5432. You can connect to it using the credentials provided in the .env file.
+
+Dockerfile  
+Multi-Stage Build  
+The Dockerfile is a multi-stage build, which includes:
+
+Build Stage: Uses the golang:1.22.0 image to compile the Go application.  
+Final Stage: Uses the gcr.io/distroless/  static-debian11 image for the final container, copying the compiled application from the build stage.  
+
+
+Builds the Go application.
+Maps port 8080 of the container to port 8080 on the host.  
+Restarts on failure.  
+Uses a volume for the application code.  
+Depends on the PostgreSQL service.  
+
+fullstack-postgres:  
+Uses the latest PostgreSQL image.
+Sets environment variables for database credentials from the .env file.
+Maps port 5432 of the container to port 5432 on the host.
+Uses a volume for the database data.
+
+pgadmin:  
+Uses the dpage/pgadmin4 image.  
+Sets environment variables for PgAdmin credentials from the .env file.  
+Maps port 5050 of the container to port 80 on the host.
+Depends on the PostgreSQL service.  
+Restarts unless stopped.  
+
+Volumes  
+api: Volume for the application code.
+database_postgres: Volume for the database data.  
+
+Networks  
+fullstack: A bridge network for communication between containers.
+Stopping the Application
+To stop the application and all related services, use the following command:
+
+    docker-compose down
+Additional Notes  
+Ensure the .env file is correctly set up with the required environment variables before starting the services.  
+The application can be accessed at http://localhost:8080 and PgAdmin at http://localhost:5050.
 
 ### Installation
 To get started with the Onboarding and Volunteer Service application, follow these steps:
@@ -123,30 +195,9 @@ As an admin, I would like to add a volunteer manual so that volunteers do not ne
 As an admin, I would like to view the volunteer list order in their role so that I can manage volunteers based on their roles (COM: Committee, CVL: Civil volunteer, MNVC: Manager of volunteer coordinators, …)  
 As an admin, I want to search for volunteers by role so that I can find volunteers with specific responsibilities.  
 
-### API Endpoints "/api/v1"
-
-#### Admin Endpoints: "/admin" 
-Before you get to use the admin api, you must log-in first to get authorize token
-GET "/list-request": Get the request list  
-GET "/request/:id" : Get a specific request  
-POST "/approve-request/:id": Approve a request, change status of request  
-POST "/reject-request/:id": Reject a request, change status of request  
-POST "/add-reject-notes/:id": Add reject notes to a request  
-DELETE "/delete-request/:id": Delete a request  
-
-#### User Endpoints: "/applicant"  
-POST "/:" Create a new user  
-PUT "/:id" : Update an existing user from register form  
-DELETE "/:id" : Delete an user with id  
-GET "/:id" : Get information about an user with id
-
-#### Application Request Endpoints:"/applicant-request"  
-POST "/" : Create a record request
-
-#### User Identity Endpoints: "/applicant-identity"  
-POST "/" : Create a user identity record  
-GET "/:id": Find a user identity  
-PUT "/:id": Update a user identity record    
+### Swagger Document  
+Swagger is a tool to view all API and testing them. In order to view Swagger UI, access the URL: "/docs/index.html". You can view and test the API we wrote there.   
+In order to use ADMIN's API you need to login as an admin and get authorize token. After that fill the responded authorize token in the authorize button with value: `bearer: "authorize token"`
 
 ### Contributing  
 
