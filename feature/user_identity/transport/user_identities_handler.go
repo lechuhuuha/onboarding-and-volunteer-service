@@ -1,4 +1,4 @@
-package http
+package transport
 
 import (
 	"net/http"
@@ -10,10 +10,10 @@ import (
 )
 
 type UserIdentityHandler struct {
-	UserIdentityUsecase *usecase.UserIdentityUsecase
+	UserIdentityUsecase usecase.UserIdentityUsecaseInterface
 }
 
-func NewUserIdentityHandler(userIdentityUsecase *usecase.UserIdentityUsecase) *UserIdentityHandler {
+func NewUserIdentityHandler(userIdentityUsecase usecase.UserIdentityUsecaseInterface) *UserIdentityHandler {
 	return &UserIdentityHandler{UserIdentityUsecase: userIdentityUsecase}
 }
 

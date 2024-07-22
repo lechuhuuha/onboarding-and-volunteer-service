@@ -6,6 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type ApplicantRepositoryInterface interface {
+	CreateApplicant(user *domain.ApplicantDomain) error
+	UpdateApplicant(user *domain.ApplicantDomain) error
+	DeleteApplicant(id int) error
+	FindApplicantByID(id int) (*domain.ApplicantDomain, error)
+}
+
 type ApplicantRepository struct {
 	DB *gorm.DB
 }

@@ -5,6 +5,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type UserIndentityRepositoryInterface interface {
+	CreateUserIdentity(identity *domain.UserIdentity) error
+	UpdateUserIdentity(identity *domain.UserIdentity) error
+	FindUserIdentityByID(id int) (*domain.UserIdentity, error)
+}
+
 type UserIdentityRepository struct {
 	DB *gorm.DB
 }

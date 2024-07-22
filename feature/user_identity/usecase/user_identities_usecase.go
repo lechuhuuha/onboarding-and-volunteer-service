@@ -8,11 +8,17 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/user_identity/storage"
 )
 
-type UserIdentityUsecase struct {
-	UserIdentityRepo *storage.UserIdentityRepository
+type UserIdentityUsecaseInterface interface {
+	CreateUserIdentity(request dto.CreateUserIdentityRequest) error
+	UpdateUserIdentity(id int, request dto.UpdateUserIdentityRequest) error
+	FindUserIdentityByID(id int) (*dto.UserIdentityResponse, error)
 }
 
-func NewUserIdentityUsecase(userIdentityRepo *storage.UserIdentityRepository) *UserIdentityUsecase {
+type UserIdentityUsecase struct {
+	UserIdentityRepo storage.UserIndentityRepositoryInterface
+}
+
+func NewUserIdentityUsecase(userIdentityRepo storage.UserIndentityRepositoryInterface) *UserIdentityUsecase {
 	return &UserIdentityUsecase{UserIdentityRepo: userIdentityRepo}
 }
 
