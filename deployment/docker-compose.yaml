@@ -15,7 +15,7 @@ services:
 
 
   fullstack-postgres:
-     image: postgres:latest
+     image: postgres:16.3
      container_name: full_db_postgres
      environment:
        - POSTGRES_USER=${DB.USER}  
