@@ -126,8 +126,16 @@ func TestFindUserIdentity(t *testing.T) {
 	r.GET("/api/v1/user-identity/:id", handler.FindUserIdentity)
 
 	t.Run("success", func(t *testing.T) {
-		mockVolunteer := &dto.UserIdentityResponse{}
-		mockUsecase.On("FindUserIdentity", 1).Return(mockVolunteer, nil)
+		mockUserIdentity := &dto.UserIdentityResponse{
+			ID:          1,
+			UserID:      2,
+			Number:      "123456789",
+			Type:        "Citizen ID",
+			Status:      0,
+			ExpiryDate:  "12-12-2025",
+			PlaceIssued: "Some city",
+		}
+		mockUsecase.On("FindUserIdentity", 1).Return(mockUserIdentity, nil)
 
 		req, err := http.NewRequest(http.MethodGet, "/api/v1/user-identity/1", nil)
 		assert.NoError(t, err)
