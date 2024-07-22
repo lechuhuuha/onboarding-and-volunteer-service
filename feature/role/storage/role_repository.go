@@ -5,6 +5,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// RoleRepository defines the methods that any repository implementation must provide.
+type RoleRepositoryInterface interface {
+	Create(role *domain.Role) error
+	GetByID(id uint) (*domain.Role, error)
+	Update(role *domain.Role) error
+	Delete(id uint) error
+}
+
 // RoleRepository handles the CRUD operations with the database.
 type RoleRepository struct {
 	DB *gorm.DB

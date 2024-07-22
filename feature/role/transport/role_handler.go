@@ -11,11 +11,11 @@ import (
 
 // RoleHandler handles the HTTP requests for roles.
 type RoleHandler struct {
-	usecase *usecase.RoleUsecase
+	usecase usecase.RoleUsecaseInterface
 }
 
 // NewRoleHandler creates a new instance of RoleHandler.
-func NewRoleHandler(usecase *usecase.RoleUsecase) *RoleHandler {
+func NewRoleHandler(usecase usecase.RoleUsecaseInterface) *RoleHandler {
 	return &RoleHandler{usecase: usecase}
 }
 
@@ -35,13 +35,13 @@ func (h *RoleHandler) CreateRole(c *gin.Context) {
 		return
 	}
 
-	role, err := h.usecase.CreateRole(input)
+	err := h.usecase.CreateRole(input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, role)
+	c.JSON(http.StatusCreated, gin.H{"message": "department created successfully"})
 }
 
 // GetRoleByID handles the HTTP GET request to retrieve a role by its ID.
@@ -92,13 +92,12 @@ func (h *RoleHandler) UpdateRole(c *gin.Context) {
 		return
 	}
 
-	role, err := h.usecase.UpdateRole(uint(id), input)
-	if err != nil {
+	if err := h.usecase.UpdateRole(uint(id), input); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, role)
+	c.JSON(http.StatusOK, gin.H{"message": "role updated successfully"})
 }
 
 // DeleteRole handles the HTTP DELETE request to delete a role.

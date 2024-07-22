@@ -6,44 +6,50 @@ import (
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/role/storage"
 )
 
+// RoleRepository defines the methods that any repository implementation must provide.
+type RoleUsecaseInterface interface {
+	CreateRole(role dto.RoleCreateDTO) error
+	GetRoleByID(id uint) (*domain.Role, error)
+	UpdateRole(id uint, input dto.RoleUpdateDTO) error
+	DeleteRole(id uint) error
+}
+
 // RoleUsecase handles the business logic for roles.
 type RoleUsecase struct {
-	repo *storage.RoleRepository
+	Rolerepo storage.RoleRepositoryInterface
 }
 
 // NewRoleUsecase creates a new instance of RoleUsecase.
-func NewRoleUsecase(repo *storage.RoleRepository) *RoleUsecase {
-	return &RoleUsecase{repo: repo}
+func NewRoleUsecase(Rolerepo storage.RoleRepositoryInterface) *RoleUsecase {
+	return &RoleUsecase{Rolerepo: Rolerepo}
 }
 
 // CreateRole creates a new role using the provided DTO.
-func (u *RoleUsecase) CreateRole(input dto.RoleCreateDTO) (*domain.Role, error) {
+func (u *RoleUsecase) CreateRole(input dto.RoleCreateDTO) error {
 	role := &domain.Role{
 		Name:   input.Name,
 		Status: input.Status,
 	}
-	err := u.repo.Create(role)
-	return role, err
+	return u.Rolerepo.Create(role)
 }
 
 // GetRoleByID retrieves a role by its ID.
 func (u *RoleUsecase) GetRoleByID(id uint) (*domain.Role, error) {
-	return u.repo.GetByID(id)
+	return u.Rolerepo.GetByID(id)
 }
 
 // UpdateRole updates a role using the provided DTO.
-func (u *RoleUsecase) UpdateRole(id uint, input dto.RoleUpdateDTO) (*domain.Role, error) {
-	role, err := u.repo.GetByID(id)
+func (u *RoleUsecase) UpdateRole(id uint, input dto.RoleUpdateDTO) error {
+	role, err := u.Rolerepo.GetByID(id)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	role.Name = input.Name
 	role.Status = input.Status
-	err = u.repo.Update(role)
-	return role, err
+	return u.Rolerepo.Update(role)
 }
 
 // DeleteRole deletes a role by its ID.
 func (u *RoleUsecase) DeleteRole(id uint) error {
-	return u.repo.Delete(id)
+	return u.Rolerepo.Delete(id)
 }
