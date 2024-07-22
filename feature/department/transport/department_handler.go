@@ -11,11 +11,11 @@ import (
 
 // DepartmentHandler handles the HTTP requests for departments.
 type DepartmentHandler struct {
-	usecase *usecase.DepartmentUsecase
+	usecase usecase.DepartmentUsecaseInterface
 }
 
 // NewDepartmentHandler creates a new instance of DepartmentHandler.
-func NewDepartmentHandler(usecase *usecase.DepartmentUsecase) *DepartmentHandler {
+func NewDepartmentHandler(usecase usecase.DepartmentUsecaseInterface) *DepartmentHandler {
 	return &DepartmentHandler{usecase: usecase}
 }
 
@@ -36,13 +36,13 @@ func (h *DepartmentHandler) CreateDepartment(c *gin.Context) {
 		return
 	}
 
-	department, err := h.usecase.CreateDepartment(input)
+	err := h.usecase.CreateDepartment(input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, department)
+	c.JSON(http.StatusCreated, gin.H{"message": "department created successfully"})
 }
 
 // GetDepartmentByID handles the HTTP GET request to retrieve a department by its ID.
@@ -94,13 +94,12 @@ func (h *DepartmentHandler) UpdateDepartment(c *gin.Context) {
 		return
 	}
 
-	department, err := h.usecase.UpdateDepartment(uint(id), input)
-	if err != nil {
+	if err := h.usecase.UpdateDepartment(uint(id), input); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, department)
+	c.JSON(http.StatusOK, gin.H{"message": "department updated successfully"})
 }
 
 // DeleteDepartment handles the HTTP DELETE request to delete a department.

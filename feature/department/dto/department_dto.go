@@ -13,3 +13,9 @@ type DepartmentUpdateDTO struct {
 	Address string `json:"location" binding:"required"`
 	Status  uint   `json:"status" binding:"required"`
 }
+
+type DepartmentResponseDTO struct {
+	Name    string `json:"name" binding:"required"`
+	Address string `json:"location" binding:"required"`
+	Status  uint   `json:"status" binding:"required"`
+}
