@@ -6,7 +6,7 @@ type ApplicantCreateDTO struct {
 	Surname string `json:"surname" binding:"required"`
 }
 
-type AppplicantUpdateDTO struct {
+type ApplicantUpdateDTO struct {
 	Email             string `json:"email"`
 	Name              string `json:"name"`
 	Surname           string `json:"surname"`
