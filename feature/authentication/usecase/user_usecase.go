@@ -1,10 +1,11 @@
 package usecase
 
 import (
+	"time"
+
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/dto"
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/storage"
 	"github.com/golang-jwt/jwt/v4"
-	"time"
 )
 
 type UserUsecaseInterface interface {
@@ -13,13 +14,15 @@ type UserUsecaseInterface interface {
 }
 
 type UserUsecase struct {
-	repo      storage.AuthenticationSrore
+	repo      storage.AuthenticationStore
 	secretKey string
 }
 
-func NewUserUsecase(repo storage.AuthenticationSrore, secretKey string) *UserUsecase {
-	return &UserUsecase{repo: repo,
-		secretKey: secretKey}
+func NewUserUsecase(repo storage.AuthenticationStore, secretKey string) *UserUsecase {
+	return &UserUsecase{
+		repo:      repo,
+		secretKey: secretKey,
+	}
 }
 func (u *UserUsecase) Login(req dto.LoginUserRequest) (*dto.LoginUserTokenResponse, string) {
 	user, msg := u.repo.GetUserByEmail(req.Email, req.Password)
