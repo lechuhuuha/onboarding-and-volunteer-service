@@ -22,6 +22,14 @@ import (
 	volunteerTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/volunteer/transport"
 	volunteerUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/volunteer/usecase"
 
+	countryStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/country/storage"
+	countryTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/country/transport"
+	countryUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/country/usecase"
+
+	departmentStorage "github.com/cesc1802/onboarding-and-volunteer-service/feature/department/storage"
+	departmentTransport "github.com/cesc1802/onboarding-and-volunteer-service/feature/department/transport"
+	departmentUsecase "github.com/cesc1802/onboarding-and-volunteer-service/feature/department/usecase"
+
 	"github.com/cesc1802/share-module/system"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -49,6 +57,8 @@ func RegisterHandlerV1(mono system.Service) {
 	applicantIdentityRepo := appliIdentityStorage.NewUserIdentityRepository(mono.DB())
 	volunteerRepo := volunteerStorage.NewVolunteerRepository(mono.DB())
 	volunteerRequestRepo := userStorage.NewVolunteerRequestRepository(mono.DB())
+	countryRepo := countryStorage.NewCountryRepository(mono.DB())
+	departmentRepo := departmentStorage.NewDepartmentRepository(mono.DB())
 
 	// Initialize usecase
 	authUseCase := authUsecase.NewUserUsecase(authRepo, secretKey)
@@ -58,6 +68,8 @@ func RegisterHandlerV1(mono system.Service) {
 	applicantIdenityUseCase := appliIdentityUsecase.NewUserIdentityUsecase(applicantIdentityRepo)
 	volunteerUseCase := volunteerUsecase.NewVolunteerUsecase(volunteerRepo)
 	volunteerRequestUseCase := userUsecase.NewVolunteerRequestUsecase(volunteerRequestRepo)
+	countryUsecase := countryUsecase.NewCountryUsecase(countryRepo)
+	departmentUsecase := departmentUsecase.NewDepartmentUsecase(departmentRepo)
 
 	// Initialize handler
 	authHandler := authTransport.NewAuthenticationHandler(authUseCase)
@@ -67,6 +79,8 @@ func RegisterHandlerV1(mono system.Service) {
 	applicantIdentityHandler := appliIdentityTransport.NewUserIdentityHandler(applicantIdenityUseCase)
 	volunteerHandler := volunteerTransport.NewVolunteerHandler(volunteerUseCase)
 	volunteerRequestHandler := userTransport.NewVolunteerRequestHandler(volunteerRequestUseCase)
+	countryHandler := countryTransport.NewCountryHandler(countryUsecase)
+	departmentHandler := departmentTransport.NewDepartmentHandler(departmentUsecase)
 
 	auth := v1.Group("/auth")
 	{
@@ -120,4 +134,21 @@ func RegisterHandlerV1(mono system.Service) {
 	{
 		volRequest.POST("/", volunteerRequestHandler.CreateVolunteerRequest)
 	}
+
+	country := v1.Group("/country")
+	{
+		country.POST("/", countryHandler.CreateCountry)
+		country.PUT("/:id", countryHandler.UpdateCountry)
+		country.DELETE("/:id", countryHandler.DeleteCountry)
+		country.GET("/:id", countryHandler.GetCountryByID)
+	}
+
+	department := v1.Group("/department")
+	{
+		department.POST("/", departmentHandler.CreateDepartment)
+		department.PUT("/:id", departmentHandler.UpdateDepartment)
+		department.DELETE("/:id", departmentHandler.DeleteDepartment)
+		department.GET("/:id", departmentHandler.GetDepartmentByID)
+	}
+
 }
