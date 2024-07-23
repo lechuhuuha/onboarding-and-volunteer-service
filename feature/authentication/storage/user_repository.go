@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type AuthenticationSrore interface {
+type AuthenticationStore interface {
 	GetUserByEmail(email string, password string) (*domain.User, string)
 	RegisterUser(request *dto.RegisterUserRequest) (*dto.RegisterUserResponse, error)
 }

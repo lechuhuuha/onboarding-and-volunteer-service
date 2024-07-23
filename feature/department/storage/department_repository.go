@@ -5,6 +5,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// DepartmentRepository defines the methods that any repository implementation must provide.
+type DepartmentRepositoryInterface interface {
+	Create(department *domain.Department) error
+	GetByID(id uint) (*domain.Department, error)
+	Update(department *domain.Department) error
+	Delete(id uint) error
+}
+
 // DepartmentRepository handles the CRUD operations with the database.
 type DepartmentRepository struct {
 	DB *gorm.DB

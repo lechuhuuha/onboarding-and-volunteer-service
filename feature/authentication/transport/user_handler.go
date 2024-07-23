@@ -1,10 +1,11 @@
 package transport
 
 import (
+	"net/http"
+
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/dto"
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/usecase"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type AuthenticationHandler struct {
