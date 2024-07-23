@@ -57,7 +57,7 @@ func (h *ApplicantHandler) UpdateApplicant(c *gin.Context) {
 		return
 	}
 
-	var request dto.AppplicantUpdateDTO
+	var request dto.ApplicantUpdateDTO
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

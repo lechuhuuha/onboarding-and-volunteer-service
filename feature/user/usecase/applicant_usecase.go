@@ -10,7 +10,7 @@ import (
 
 type ApplicantUsecaseInterface interface {
 	CreateApplicant(request dto.ApplicantCreateDTO) error
-	UpdateApplicant(id int, request dto.AppplicantUpdateDTO) error
+	UpdateApplicant(id int, request dto.ApplicantUpdateDTO) error
 	DeleteApplicant(id int) error
 	FindApplicantByID(id int) (*dto.ApplicantResponseDTO, error)
 }
@@ -32,7 +32,7 @@ func (u *ApplicantUsecase) CreateApplicant(request dto.ApplicantCreateDTO) error
 	return u.ApplicantRepo.CreateApplicant(user)
 }
 
-func (u *ApplicantUsecase) UpdateApplicant(id int, request dto.AppplicantUpdateDTO) error {
+func (u *ApplicantUsecase) UpdateApplicant(id int, request dto.ApplicantUpdateDTO) error {
 	user, err := u.ApplicantRepo.FindApplicantByID(id)
 	if err != nil {
 		return err
