@@ -1,9 +1,10 @@
 module github.com/cesc1802/onboarding-and-volunteer-service
 
-go 1.22.0
+go 1.22.5
+
+toolchain go1.23.1
 
 require (
-	github.com/cesc1802/share-module v0.0.0-20240607091227-2bfe51dd43b5
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -13,6 +14,11 @@ require (
 	github.com/swaggo/swag v1.16.3
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.10
+)
+
+require (
+	github.com/cesc1802/share-module v0.0.0-20241115033506-b815e0ded227 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 )
 
 require (
