@@ -3,10 +3,11 @@ package server
 import (
 	"context"
 
-	"github.com/cesc1802/onboarding-and-volunteer-service/feature"
 	"github.com/cesc1802/share-module/config"
 	"github.com/cesc1802/share-module/system"
 	"github.com/spf13/cobra"
+
+	"github.com/cesc1802/onboarding-and-volunteer-service/feature"
 )
 
 type Module struct{}

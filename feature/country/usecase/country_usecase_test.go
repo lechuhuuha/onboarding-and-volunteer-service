@@ -4,15 +4,22 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/domain"
-	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/dto"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/domain"
+	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/dto"
 )
 
 // MockCountryRepository is a mock implementation of CountryRepositoryInterface.
 type MockCountryRepository struct {
 	mock.Mock
+}
+
+// List is a mock method for listing countries.
+func (m *MockCountryRepository) List() ([]*domain.Request, string) {
+	args := m.Called()
+	return args.Get(0).([]*domain.Request), args.String(1)
 }
 
 // Create is a mock method for creating a country.
@@ -64,9 +71,9 @@ func TestGetCountryByID(t *testing.T) {
 	mockRepo := new(MockCountryRepository)
 	usecase := NewCountryUsecase(mockRepo)
 
-	expectedCountry := &domain.Country{
-		Id:   1,
-		Name: "TestCountry",
+	expectedCountry := &dto.CountryResponseDTO{
+		Name:   "TestCountry",
+		Status: 0,
 	}
 
 	mockRepo.On("GetByID", uint(1)).Return(expectedCountry, nil)

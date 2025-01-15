@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"gorm.io/gorm"
+
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/domain"
 	"github.com/cesc1802/onboarding-and-volunteer-service/feature/authentication/dto"
-	"gorm.io/gorm"
 )
 
 type AuthenticationStore interface {

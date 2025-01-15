@@ -4,10 +4,11 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/domain"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/domain"
 )
 
 func setupMockDB() (*gorm.DB, sqlmock.Sqlmock, error) {
@@ -15,7 +16,7 @@ func setupMockDB() (*gorm.DB, sqlmock.Sqlmock, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	dialector := mysql.New(mysql.Config{
+	dialector := postgres.New(postgres.Config{
 		Conn: db,
 	})
 	gormDB, err := gorm.Open(dialector, &gorm.Config{})

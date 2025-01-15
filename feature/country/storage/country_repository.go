@@ -1,12 +1,14 @@
 package storage
 
 import (
-	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/domain"
 	"gorm.io/gorm"
+
+	"github.com/cesc1802/onboarding-and-volunteer-service/feature/country/domain"
 )
 
 // CountryRepositoryInterface defines the methods that any repository implementation must provide.
 type CountryRepositoryInterface interface {
+	List() ([]*domain.Request, string)
 	Create(country *domain.Country) error
 	GetByID(id uint) (*domain.Country, error)
 	Update(country *domain.Country) error
@@ -21,6 +23,19 @@ type CountryRepository struct {
 // NewCountryRepository creates a new instance of CountryRepository.
 func NewCountryRepository(db *gorm.DB) *CountryRepository {
 	return &CountryRepository{DB: db}
+}
+
+// Create inserts a new country record into the database.
+func (r *CountryRepository) List() ([]*domain.Request, string) {
+	var listRequest []*domain.Request
+	result := r.DB.Find(&listRequest)
+	if result.Error != nil {
+		return nil, result.Error.Error()
+	}
+	if len(listRequest) == 0 {
+		return nil, "No request found"
+	}
+	return listRequest, ""
 }
 
 // Create inserts a new country record into the database.
